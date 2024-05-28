@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Player Info</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <style>
+        .img-circle{
+            width:70px;
+            border-radius:50%
+        }
+        .match-box{
+            padding: 3rem !important;
+            margin: .5rem !important;
+        }
+        .match-box:hover{
+            padding: 3.5rem !important;
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">UFC</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/tournament}">Tournaments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/player}">Player's Info</a>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+<div class="container my-2">
+
+    <div class="row p-2">
+        <div class="col" th:text="${tournamentName}">UFC - 1</div>
+        <div class="col" th:text="${duration}">Jan 24</div>
+        <div class="col" th:text="${playerCount}">2</div>
+    </div>
+
+
+<!--    <h2 th:if="${matchList}">Match Schedule</h2>-->
+<!--    <table th:if="${matchList}" style="width:98%" class = "table table-striped table-responsive-md">-->
+<!--        <thead>-->
+<!--        <tr>-->
+<!--            &lt;!&ndash;            <th>Id</th>&ndash;&gt;-->
+<!--            <th>Round No</th>-->
+<!--            <th>Match No</th>-->
+<!--            <th>Player One</th>-->
+<!--            <th>Player Two</th>-->
+<!--            <th>Player One Score</th>-->
+<!--            <th>Player Two Score</th>-->
+<!--            <th>Winner</th>-->
+<!--        </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--        <tr th:each="match:${matchList}">-->
+<!--            &lt;!&ndash;            <td th:text="${match.matchId}"></td>&ndash;&gt;-->
+<!--            <td th:text="${match.roundNo}"></td>-->
+<!--            <td th:text="${match.matchNo}"></td>-->
+<!--            <td th:text="${match.playerOne}"></td>-->
+<!--            <td th:text="${match.playerTwo}"></td>-->
+<!--            <td th:text="${match.playerOneScore}"></td>-->
+<!--            <td th:text="${match.playerTwoScore}"></td>-->
+<!--            <td th:text="${match.winner}"></td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
+<!--    </table>-->
+
+    <h2 th:if="${pointsTable}">Points Table</h2>
+        <table th:if="${pointsTable}" style="width:98%" class = "table table-striped table-responsive-md">
+            <thead>
+            <tr>
+                <th>Player Name</th>
+                <th>Matches Played</th>
+                <th>Won</th>
+                <th>Lost</th>
+                <th>Score</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="pt:${pointsTable}">
+                <!--            <td th:text="${match.matchId}"></td>-->
+                <td th:text="${pt.playerName}"></td>
+                <td th:text="${pt.matchesPlayed}"></td>
+                <td th:text="${pt.won}"></td>
+                <td th:text="${pt.lost}"></td>
+                <td th:text="${pt.score}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+    <h2 th:if="${matchList}">Match Schedule</h2>
+    <div class="row" th:if="${matchList}">
+        <div class="col-4 p-2" th:each="match:${matchList}">
+<!--            <div class="">-->
+<!--                <img class="img-circle"  th:src="${match.playerOne}"/> VS-->
+<!--                <img class="img-circle"  th:src="${match.playerTwo}"/>-->
+<!--            </div>-->
+            <div class="border rounded match-box">
+<!--                <div>-->
+<!--                    <img class="img-circle"  th:src="@{../images/amit.jpg}"/> VS-->
+<!--                    <img class="img-circle" th:src="@{../images/ananya.jpg}"/>-->
+<!--                </div>-->
+                <div>
+                    <img class="img-circle"  th:src="${match.playerOneImagePath}"/> VS
+                    <img class="img-circle"  th:src="${match.playerTwoImagePath}"/>
+                </div>
+                <h5><span th:text="${match.playerOne}"/> vs <span th:text="${match.playerTwo}"/></h5>
+                <h6>
+                    Round: <span th:text="${match.roundNo}"/> <br>
+                    Match No: <span th:text="${match.matchNo}"/> <br>
+                    Winner : <span th:text="${match.winner}"/>
+                </h6>
+                <h5>Score : <span th:text="${match.playerOneScore}"/> - <span th:text="${match.playerTwoScore}"/></h5>
+                <br>
+<!--                <a th:if="${match.winner == 'Game Pending'}" th:href="@{/match/{id}(id=${match.matchId})}"-->
+<!--                   class="btn btn-primary">Update Score</a>-->
+                <!-- Button trigger modal -->
+<!--                <button th:if="${match.winner == 'Game Pending'}" th:href="@{/match/{id}(id=${match.matchId})}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">-->
+<!--                    Update Score-->
+<!--                </button>-->
+                <button th:if="${match.winner == 'Game Pending'}"
+                        class="btn btn-primary"
+                        th:data-id="${match.matchId}"
+                        th:data-matchno="${match.matchNo}"
+                        th:data-roundno="${match.roundNo}"
+                        th:data-playerone="${match.playerOne}"
+                        th:data-playertwo="${match.playerTwo}"
+                        onclick="openModal(this)">Update</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/match/update/}" th:object="${match}" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel">Update Match</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" th:field="*{matchId}" id="matchId">
+                    <div class="mb-3">
+                        <label for="matchNo" class="form-label">Match No</label>
+                        <input type="text" class="form-control" th:field="*{matchNo}" id="matchNo" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="roundNo" class="form-label">Round No</label>
+                        <input type="text" class="form-control" th:field="*{roundNo}" id="roundNo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="playerOne" class="form-label">Player One</label>
+                        <input type="text" class="form-control" th:field="*{playerOne}" id="playerOne">
+                    </div>
+                    <div class="mb-3">
+                        <label for="playerTwo" class="form-label">Player Two</label>
+                        <input type="text" class="form-control" th:field="*{playerTwo}" id="playerTwo">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+    function openModal(button) {
+        const matchId = button.getAttribute("data-id");
+        const matchNo = button.getAttribute("data-matchno");
+        const roundNo = button.getAttribute("data-roundno");
+        const playerOne = button.getAttribute("data-playerone");
+        const playerTwo = button.getAttribute("data-playertwo");
+
+        document.getElementById("matchId").value = matchId;
+        document.getElementById("matchNo").value = matchNo;
+        document.getElementById("roundNo").value = roundNo;
+        document.getElementById("playerOne").value = playerOne;
+        document.getElementById("playerTwo").value = playerTwo;
+
+        const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
+        updateModal.show();
+    }
+</script>
+
+</body>
+</html>

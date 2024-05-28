@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Player Info</title>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+          crossorigin="anonymous">
+    <style>
+        .img-circle{
+            width:50px;
+            border-radius:50%
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">UFC</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/tournament}">Tournaments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/player}">Player's Info</a>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+<div class="container my-2">
+
+    <h3>Player's Info</h3>
+<!--    <img src="images/amit.jpg" width="200" />-->
+
+    <table style="width:80%" class = "table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+<!--            <th>Nickname</th>-->
+<!--            <th>Image</th>-->
+            <th>Match Played</th>
+            <th>Score</th>
+            <th>Total Wins</th>
+            <th>Win %</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="player:${playerList}">
+            <td th:text="${player.player_id}"></td>
+            <td th:text="${player.player_name}"></td>
+<!--            <td th:text="${player.player_nickname}"></td>-->
+<!--            <td><img class="img-circle"  th:src="${player.image_path}"/></td>-->
+            <td th:text="${player.match_played}"></td>
+            <td th:text="${player.score}"></td>
+            <td th:text="${player.total_wins}"></td>
+            <td th:text="${player.win_percent}"></td>
+
+
+<!--            <td><img src="../static/images/amit.jpg" width="200" th:src="@{images/amit.jpg}"/></td>-->
+
+
+            <!--<td> <a th:href="@{/showFormForUpdate/{id}(id=${employee.id})}"
+                    class="btn btn-primary">Update</a>
+                <a th:href="@{/deleteEmployee/{id}(id=${employee.id})}"
+                   class="btn btn-danger">Delete</a>
+            </td>-->
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
