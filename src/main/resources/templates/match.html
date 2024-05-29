@@ -13,14 +13,50 @@
             border-radius:50%
         }
         .match-box{
-            padding: 3rem !important;
+            padding: 2rem !important;
             margin: .5rem !important;
         }
         .match-box:hover{
-            padding: 3.5rem !important;
+            //padding: 3.5rem !important;
             background: #eee;
         }
     </style>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+        function openModal(button) {
+            const matchId = button.getAttribute("data-matchid");
+            const tourId = button.getAttribute("data-tourid");
+            const matchNo = button.getAttribute("data-matchno");
+            const roundNo = button.getAttribute("data-roundno");
+            const playerOneImagePath = button.getAttribute("data-playeroneimagepath");
+            const playerTwoImagePath = button.getAttribute("data-playertwoimagepath");
+            const playerOneId = button.getAttribute("data-playeroneid");
+            const playerTwoId = button.getAttribute("data-playertwoid");
+            const playerOneScore = button.getAttribute("data-playeronescore");
+            const playerTwoScore = button.getAttribute("data-playertwoscore");
+
+            //console.log(matchId+" "+playerOne);
+
+            document.getElementById("matchId").value = matchId;
+            document.getElementById("tourId").value = tourId;
+            document.getElementById("matchNo").value = matchNo;
+            document.getElementById("matchNo1").innerHTML = matchNo;
+            document.getElementById("roundNo").value = roundNo;
+            document.getElementById("playerOneImagePath").src = playerOneImagePath;
+            document.getElementById("playerTwoImagePath").src = playerTwoImagePath;
+            document.getElementById("playerOneId").value = playerOneId;
+            document.getElementById("playerTwoId").value = playerTwoId;
+            document.getElementById("playerOneScore").value = playerOneScore;
+            document.getElementById("playerTwoScore").value = playerTwoScore;
+
+            console.log(playerOneId);
+            const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
+            updateModal.show();
+        }
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -48,6 +84,7 @@
 <div class="container my-2">
 
     <div class="row p-2">
+        <div class="col" th:text="${tournamentId}">001</div>
         <div class="col" th:text="${tournamentName}">UFC - 1</div>
         <div class="col" th:text="${duration}">Jan 24</div>
         <div class="col" th:text="${playerCount}">2</div>
@@ -97,7 +134,7 @@
             <tr th:each="pt:${pointsTable}">
                 <!--            <td th:text="${match.matchId}"></td>-->
                 <td th:text="${pt.playerName}"></td>
-                <td th:text="${pt.matchesPlayed}"></td>
+                <td th:text="${pt.matchPlayed}"></td>
                 <td th:text="${pt.won}"></td>
                 <td th:text="${pt.lost}"></td>
                 <td th:text="${pt.score}"></td>
@@ -117,15 +154,16 @@
 <!--                    <img class="img-circle"  th:src="@{../images/amit.jpg}"/> VS-->
 <!--                    <img class="img-circle" th:src="@{../images/ananya.jpg}"/>-->
 <!--                </div>-->
-                <div>
-                    <img class="img-circle"  th:src="${match.playerOneImagePath}"/> VS
+                <div class="mb-3 d-flex justify-content-around">
+                    <img class="img-circle"  th:src="${match.playerOneImagePath}"/>
+                    <h3 style="padding-top: 20px;">vs</h3>
                     <img class="img-circle"  th:src="${match.playerTwoImagePath}"/>
                 </div>
-                <h5><span th:text="${match.playerOne}"/> vs <span th:text="${match.playerTwo}"/></h5>
+                <h5><span th:text="${match.playerOneName}"/> vs <span th:text="${match.playerTwoName}"/></h5>
                 <h6>
                     Round: <span th:text="${match.roundNo}"/> <br>
                     Match No: <span th:text="${match.matchNo}"/> <br>
-                    Winner : <span th:text="${match.winner}"/>
+                    Winner : <span th:text="${match.winnerName}"/>
                 </h6>
                 <h5>Score : <span th:text="${match.playerOneScore}"/> - <span th:text="${match.playerTwoScore}"/></h5>
                 <br>
@@ -135,13 +173,18 @@
 <!--                <button th:if="${match.winner == 'Game Pending'}" th:href="@{/match/{id}(id=${match.matchId})}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">-->
 <!--                    Update Score-->
 <!--                </button>-->
-                <button th:if="${match.winner == 'Game Pending'}"
+                <button th:if="${match.winner == 0}"
                         class="btn btn-primary"
-                        th:data-id="${match.matchId}"
+                        th:data-tourid="${tournamentId}"
+                        th:data-matchid="${match.matchId}"
                         th:data-matchno="${match.matchNo}"
                         th:data-roundno="${match.roundNo}"
-                        th:data-playerone="${match.playerOne}"
-                        th:data-playertwo="${match.playerTwo}"
+                        th:data-playeroneid="${match.playerOneId}"
+                        th:data-playertwoid="${match.playerTwoId}"
+                        th:data-playeroneimagepath="${match.playerOneImagePath}"
+                        th:data-playertwoimagepath="${match.playerTwoImagePath}"
+                        th:data-playeronescore="${match.playerOneScore}"
+                        th:data-playertwoscore="${match.playerTwoScore}"
                         onclick="openModal(this)">Update</button>
             </div>
         </div>
@@ -153,33 +196,41 @@
 <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form th:action="@{/match/update/}" th:object="${match}" method="post">
+            <form action="#" th:action="@{/match/update}" th:object="${match}" method="post">
+<!--                <form th:action="@{/match/update/}" th:object="${match}" method="post">-->
                 <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel">Update Match</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title mr-3" id="updateModalLabel">Match No: </h5>
+                    <h5 id="matchNo1">23</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" th:field="*{matchId}" id="matchId">
-                    <div class="mb-3">
-                        <label for="matchNo" class="form-label">Match No</label>
-                        <input type="text" class="form-control" th:field="*{matchNo}" id="matchNo" readonly>
+                    <input type="hidden" th:field="*{tourId}" id="tourId">
+                    <input type="hidden" th:field="*{matchNo}" id="matchNo">
+                    <input type="hidden" th:field="*{roundNo}" id="roundNo">
+                    <input type="hidden" th:field="*{playerOneId}" id="playerOneId">
+                    <input type="hidden" th:field="*{playerTwoId}" id="playerTwoId">
+
+
+                    <div class="mb-3 d-flex justify-content-around">
+                        <img class="img-circle"  id="playerOneImagePath" th:src="${match.playerOneImagePath}"/>
+                        <h3 style="padding-top: 20px;">vs</h3>
+                        <img class="img-circle"  id="playerTwoImagePath" th:src="${match.playerTwoImagePath}"/>
                     </div>
-                    <div class="mb-3">
-                        <label for="roundNo" class="form-label">Round No</label>
-                        <input type="text" class="form-control" th:field="*{roundNo}" id="roundNo">
-                    </div>
-                    <div class="mb-3">
-                        <label for="playerOne" class="form-label">Player One</label>
-                        <input type="text" class="form-control" th:field="*{playerOne}" id="playerOne">
-                    </div>
-                    <div class="mb-3">
-                        <label for="playerTwo" class="form-label">Player Two</label>
-                        <input type="text" class="form-control" th:field="*{playerTwo}" id="playerTwo">
+                    <div class="mb-3 row">
+                        <div class="col-6">
+                            <label for="playerOneScore" class="form-label">Player One Score</label>
+                            <input type="text" class="form-control" th:field="*{playerOneScore}" id="playerOneScore">
+                        </div>
+                        <div class="col-6">
+                            <label for="playerTwoScore" class="form-label">Player Two Score</label>
+                            <input type="text" class="form-control" th:field="*{playerTwoScore}" id="playerTwoScore">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update Score</button>
                 </div>
             </form>
         </div>
@@ -188,27 +239,6 @@
 
 
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script>
-    function openModal(button) {
-        const matchId = button.getAttribute("data-id");
-        const matchNo = button.getAttribute("data-matchno");
-        const roundNo = button.getAttribute("data-roundno");
-        const playerOne = button.getAttribute("data-playerone");
-        const playerTwo = button.getAttribute("data-playertwo");
-
-        document.getElementById("matchId").value = matchId;
-        document.getElementById("matchNo").value = matchNo;
-        document.getElementById("roundNo").value = roundNo;
-        document.getElementById("playerOne").value = playerOne;
-        document.getElementById("playerTwo").value = playerTwo;
-
-        const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
-        updateModal.show();
-    }
-</script>
 
 </body>
 </html>

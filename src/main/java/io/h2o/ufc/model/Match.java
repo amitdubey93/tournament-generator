@@ -24,17 +24,27 @@ public class Match {
     //private int tournamentId;
     private int roundNo;
     private int matchNo;
-    private String playerOne;
-    private String playerTwo;
+    private int playerOneId;
+    private int playerTwoId;
     private int playerOneScore;
     private int playerTwoScore;
-    private String winner;
+    private int winner;
+
+    @Transient
+    private String playerOneName;
+    @Transient
+    private String playerTwoName;
 
     @Transient
     private String playerOneImagePath;
     @Transient
     private String playerTwoImagePath;
 
+    @Transient
+    private int TourId;
+
+    @Transient
+    private String winnerName;
 
 
 }

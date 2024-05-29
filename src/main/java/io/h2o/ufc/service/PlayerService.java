@@ -16,4 +16,11 @@ public class PlayerService {
     }
 
 
+    public int updatePlayerWinStats(int score, int playerId){
+        return playerRepository.updatePlayerWinStats(score, playerId);
+    }
+
+    public int updatePlayerLossStats(int score, int playerId){
+        return playerRepository.updatePlayerLossStats(score, playerId);
+    }
 }

@@ -14,13 +14,13 @@ import lombok.*;
 public class Player {
 
     @Id
-    private Integer player_id;
-    private String player_name;
-    private String player_nickname;
-    private String image_path;
-    private String match_played;
-    private String score;
-    private String total_wins;
-    private String win_percent;
+    private int playerId;
+    private String playerName;
+    private String playerNickname;
+    private String imagePath;
+    private int matchPlayed;
+    private int score;
+    private int totalWins;
+    private float winPercent;
 
 }

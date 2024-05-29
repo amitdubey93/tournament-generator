@@ -16,4 +16,7 @@ public class MatchService {
         return matchRepository.findAll();
     }
 
+    public int updateMatchScore(int playerOneScore, int playerTwoScore, int winner, int matchId){
+       return matchRepository.updateMatchScore(playerOneScore,playerTwoScore,winner,matchId);
+    }
 }

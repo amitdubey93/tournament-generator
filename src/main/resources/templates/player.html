@@ -57,14 +57,14 @@
         </thead>
         <tbody>
         <tr th:each="player:${playerList}">
-            <td th:text="${player.player_id}"></td>
-            <td th:text="${player.player_name}"></td>
+            <td th:text="${player.playerId}"></td>
+            <td th:text="${player.playerName}"></td>
 <!--            <td th:text="${player.player_nickname}"></td>-->
 <!--            <td><img class="img-circle"  th:src="${player.image_path}"/></td>-->
-            <td th:text="${player.match_played}"></td>
+            <td th:text="${player.matchPlayed}"></td>
             <td th:text="${player.score}"></td>
-            <td th:text="${player.total_wins}"></td>
-            <td th:text="${player.win_percent}"></td>
+            <td th:text="${player.totalWins}"></td>
+            <td th:text="${player.winPercent}"></td>
 
 
 <!--            <td><img src="../static/images/amit.jpg" width="200" th:src="@{images/amit.jpg}"/></td>-->

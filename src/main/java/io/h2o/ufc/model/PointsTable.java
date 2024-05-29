@@ -25,8 +25,12 @@ public class PointsTable {
     private Tournament tournament;
 
     //private int tournamentId;
+    private int playerId;
+
+    @Transient
     private String playerName;
-    private int matchesPlayed;
+
+    private int matchPlayed;
     private int won;
     private int lost;
     private int score;
