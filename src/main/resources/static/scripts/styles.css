@@ -1,0 +1,12 @@
+.img-circle{
+  width:70px;
+  border-radius:50%
+}
+.match-box{
+  padding: 2rem !important;
+  margin: .5rem !important;
+}
+.match-box:hover{
+  //padding: 3.5rem !important;
+  background: #eee;
+}

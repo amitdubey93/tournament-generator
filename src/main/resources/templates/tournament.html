@@ -3,34 +3,11 @@
 <head>
     <meta charset="ISO-8859-1">
     <title>Tournament Generator</title>
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-          crossorigin="anonymous">
+
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">UFC</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/}">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/tournament}">Tournaments</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/player}">Player's Info</a>
-            </li>
-
-        </ul>
-    </div>
-</nav>
+<!--<div th:replace="fragments/head_script :: head_script">...</div>-->
+<div th:replace="~{fragments/header :: header}">...</div>
 <div class="container my-5">
 
     <form action="#" th:action="@{/tournament}" th:object="${tournament}" method="post"
@@ -41,6 +18,7 @@
         <div class="row">
             <div class="form-group col">
                 <p>Give A Name: <input class="form-control" type="text" th:field="*{tournamentName}" /></p>
+                    <p th:if="${#fields.hasErrors('tournamentName')}" th:errors="*{tournamentName}">Name Error</p>
             </div>
             <div class="form-group col">
                 <p>Duration: <input class="form-control" type="text" th:field="*{duration}" /></p>
@@ -52,38 +30,8 @@
         <p><input type="submit" class="btn btn-primary" value="Submit" /> <input type="reset" class="btn btn-secondary" value="Reset" /></p>
     </form>
 
-<!--        <h3>Create Tournament</h3>-->
-<!--        <div class="card">-->
-<!--            <div class="card-body">-->
-<!--                <div class="col-md-6">-->
-<!--                    <form action="#" th:action="@{/tournament}" th:object="${tournament}" method="post">-->
-<!--                        <div class="row">-->
-<!--                            <div class="form-group col-md-8">-->
-<!--                                <label for="tournamentName" class="col-form-label">Give A Name:</label> <input type="text" th:field="*{tournamentName}" class="form-control" id="tournamentName" placeholder="Name"> <span th:if="${#fields.hasErrors('tournamentName')}" th:errors="*{tournamentName}" class="text-danger"></span>-->
-<!--                            </div>-->
-<!--                            <div class="form-group col-md-8">-->
-<!--                                <label for="duration" class="col-form-label">Duration:</label> <input type="text" th:field="*{duration}" class="form-control" id="duration" placeholder="Duration"> <span th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}" class="text-danger"></span>-->
-<!--                            </div>-->
-
-<!--                            <div class="form-group col-md-8">-->
-<!--                                <label for="playerCount" class="col-form-label">Player Count:</label> <input type="text" th:field="*{playerCount}" class="form-control" id="playerCount" placeholder="Player Count"> <span th:if="${#fields.hasErrors('playerCount')}" th:errors="*{playerCount}" class="text-danger"></span>-->
-<!--                            </div>-->
-
-<!--                            <div class="col-md-6">-->
-<!--                                <input type="submit" class="btn btn-primary" value="Post">-->
-<!--                            </div>-->
-
-<!--                            <div class="form-group col-md-8"></div>-->
-
-<!--                        </div>-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
 
     <h3 th:if="${tournamentList}">Tournaments</h3>
-
     <table th:if="${tournamentList}" style="width:98%" class = "table table-striped table-responsive-md">
         <thead>
         <tr>

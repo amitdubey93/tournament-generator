@@ -56,7 +56,7 @@ public class TournamentController {
 //        Map<String, String> images = playerService.findAll().stream().collect(Collectors
 //                .toMap(player -> player.getPlayerName(),  player -> player.getImagePath()));
         Map<Integer, Player> playerMap = playerService.findAll().stream().collect(Collectors
-                .toMap(player -> player.getPlayerId(),  player -> player));
+                .toMap(Player::getPlayerId, player -> player));
 
         System.err.println("playerMap:: "+playerMap);
         Tournament tournament = tournamentService.findById(id);
@@ -75,18 +75,19 @@ public class TournamentController {
            System.err.println(match);
        });
 
-
-
         Collection<PointsTable> pointsTable = tournament.getPointsTable().stream().sorted(
                 (pt1, pt2) -> Integer.compare(pt2.getScore(), pt1.getScore())).toList();
 
         pointsTable.stream().forEach(pt -> pt.setPlayerName(playerMap.get(pt.getPlayerId()).getPlayerName()));
         System.err.println(matchList);
         System.err.println(pointsTable);
+
         model.addAttribute("tournamentId", tournament.getTournamentId());
         model.addAttribute("tournamentName", tournament.getTournamentName());
         model.addAttribute("duration", tournament.getDuration());
         model.addAttribute("playerCount", tournament.getPlayerCount());
+        model.addAttribute("totalMatches", matchList.size());
+        model.addAttribute("playedMatches", matchList.stream().filter(match -> match.getWinner() != 0).count());
 
         model.addAttribute("matchList", matchList);
         model.addAttribute("pointsTable", pointsTable);
@@ -96,8 +97,12 @@ public class TournamentController {
     }
 
     @PostMapping("/tournament")
-    public String createTournament(@Valid Tournament tournament, BindingResult result, Model model) {
-
+    public String createTournament(@Valid @ModelAttribute("tournament") Tournament tournament, BindingResult bindingResult, Model model) {
+        System.err.println(bindingResult.hasErrors());
+        System.err.println(bindingResult);
+        if (bindingResult.hasErrors()) {
+            return "";
+        }
         //System.err.println(tournament);
         ScheduleGenerator generator = new ScheduleGenerator();
         List<Integer> players = playerService.findAll().stream().map(Player::getPlayerId).toList();
@@ -137,8 +142,8 @@ public class TournamentController {
 
         int winnerId = playerOneScore > playerTwoScore ? playerOneId : playerTwoId;
         int loserId = playerOneScore < playerTwoScore ? playerOneId : playerTwoId;
-        int winnerScore = playerOneScore > playerTwoScore ? playerOneScore : playerTwoScore;
-        int loserScore =  playerOneScore < playerTwoScore ? playerOneScore : playerTwoScore;
+        int winnerScore = Math.max(playerOneScore, playerTwoScore);
+        int loserScore = Math.min(playerOneScore, playerTwoScore);
 
         System.err.println("winnerId:: "+winnerId);
         System.err.println("loserId:: "+loserId);

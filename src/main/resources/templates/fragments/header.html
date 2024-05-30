@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-3" th:fragment="header">
+
+    <link rel="stylesheet" th:href="@{/scripts/bootstrap.css}" />
+    <link rel="stylesheet" th:href="@{/scripts/styles.css}" />
+
+    <script th:src="@{/scripts/jquery-3.3.1.slim.min.js}"></script>
+    <script th:src="@{/scripts/bootstrap.min.js}" ></script>
+    <script th:src="@{/scripts/popper.min.js}"></script>
+    <script th:src="@{/scripts/app.js}"></script>
+
+    <a class="navbar-brand" href="#">UFC</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+              <a class="nav-link" th:href="@{/}">Home</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" th:href="@{/tournament}">Tournaments</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" th:href="@{/player}">Player's Info</a>
+          </li>
+      </ul>
+    </div>
+</nav>
+</body>
+</html>
