@@ -22,7 +22,7 @@
                 <div class="card-header" th:text="${tournamentName}">Tournament Name</div>
                 <div class="card-body">
                     <h5 class="card-title">Tournament Details</h5>
-                    Players Participated: <p class="card-text">7</p>
+                    Players Participated: <p class="card-text" th:text="${playerParticipated}">7</p>
                     Total Matches: <p class="card-text" th:text="${totalMatches}">42</p>
                     Completed Matches: <p class="card-text" th:text="${playedMatches}">13</p>
                 </div>

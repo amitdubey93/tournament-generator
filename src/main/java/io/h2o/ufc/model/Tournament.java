@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 @Data
@@ -27,8 +28,16 @@ public class Tournament {
     @NotNull
     @Size(min=2, max=30)
     private String tournamentName;
+
+    @Transient
+    private Object playerIds;
+
+    @Transient
+    private List<Player> playerList;
+
     @NotNull
     private String duration;
+
     @NotNull
     @Min(4)
     private int playerCount;

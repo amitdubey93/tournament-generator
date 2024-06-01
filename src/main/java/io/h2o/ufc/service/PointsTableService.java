@@ -13,7 +13,9 @@ public class PointsTableService {
     @Autowired
     private PointsTableRepository pointsTableRepository;
 
-
+    public List<Player> getPlayerData(){
+        return pointsTableRepository.getPlayerData();
+    }
     public int updatePointsTablePlayerWinStats(int score, int playerId, int tournamentId){
         return pointsTableRepository.updatePointsTablePlayerWinStats(score, playerId, tournamentId);
     }

@@ -23,4 +23,11 @@ public class Player {
     private int totalWins;
     private float winPercent;
 
+    public Player(int playerId, int matchPlayed, int score, int totalWins, float winPercent) {
+        this.playerId = playerId;
+        this.matchPlayed = matchPlayed;
+        this.score = score;
+        this.totalWins = totalWins;
+        this.winPercent = winPercent;
+    }
 }

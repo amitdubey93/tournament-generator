@@ -12,6 +12,7 @@ import io.h2o.ufc.service.TournamentService;
 //import jakarta.validation.Valid;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 public class TournamentController {
 
@@ -48,6 +50,7 @@ public class TournamentController {
     public String tournaments(Tournament tournament, Model model) {
         model.addAttribute("tournamentList", tournamentService.findAll());
         model.addAttribute("matchList", null);
+        model.addAttribute("playerList", playerService.findAll());
         return "tournament";
     }
 
@@ -72,20 +75,21 @@ public class TournamentController {
            String winner = match.getWinner() == 0 ? "Match Pending" : playerMap.get(match.getWinner()).getPlayerName();
            match.setWinnerName(winner);
            //System.err.println(playerMap.get(match.getPlayerOne()).getPlayerName());
-           System.err.println(match);
+           //System.err.println(match);
        });
 
         Collection<PointsTable> pointsTable = tournament.getPointsTable().stream().sorted(
                 (pt1, pt2) -> Integer.compare(pt2.getScore(), pt1.getScore())).toList();
 
         pointsTable.stream().forEach(pt -> pt.setPlayerName(playerMap.get(pt.getPlayerId()).getPlayerName()));
-        System.err.println(matchList);
-        System.err.println(pointsTable);
+//        System.err.println(matchList);
+//        System.err.println(pointsTable);
 
         model.addAttribute("tournamentId", tournament.getTournamentId());
         model.addAttribute("tournamentName", tournament.getTournamentName());
         model.addAttribute("duration", tournament.getDuration());
         model.addAttribute("playerCount", tournament.getPlayerCount());
+        model.addAttribute("playerParticipated", tournament.getPointsTable().size());
         model.addAttribute("totalMatches", matchList.size());
         model.addAttribute("playedMatches", matchList.stream().filter(match -> match.getWinner() != 0).count());
 
@@ -99,19 +103,23 @@ public class TournamentController {
     @PostMapping("/tournament")
     public String createTournament(@Valid @ModelAttribute("tournament") Tournament tournament, BindingResult bindingResult, Model model) {
         System.err.println(bindingResult.hasErrors());
-        System.err.println(bindingResult);
+        //System.err.println(bindingResult);
+        log.info("bindingResult:: "+bindingResult);
         if (bindingResult.hasErrors()) {
-            return "";
+            return "redirect:tournament";
         }
-        //System.err.println(tournament);
+
+        System.err.println(tournament.getPlayerList());
         ScheduleGenerator generator = new ScheduleGenerator();
-        List<Integer> players = playerService.findAll().stream().map(Player::getPlayerId).toList();
+        List<Integer> players = tournament.getPlayerList().stream().map(Player::getPlayerId).toList();
+//        List<Integer> players = playerService.findAll().stream().map(Player::getPlayerId).toList();
         //List<String> players = List.of("Amit", "Ananya", "Suryansh", "Upendra", "Shivam", "Biswajeet");
         //System.err.println(players);
+        log.info("players:: "+players);
         List<Match> schedule = generator.generateSchedule(tournament, players);
-        List<PointsTable> pointsTable = playerService.findAll().stream().map(player -> {
+        List<PointsTable> pointsTable = tournament.getPlayerList().stream().map(player -> {
             return new PointsTable().builder()
-                    .playerId(player.getPlayerId())
+                    .playerId((int) player.getPlayerId())
                     .tournament(tournament)
                     .matchPlayed(0)
                     .won(0)
@@ -131,9 +139,9 @@ public class TournamentController {
     @PostMapping("/match/update")
     @Transactional
     public String updateMatchScore(@Valid Match match, BindingResult result, Model model){
-        System.err.println(match);
+//        System.err.println(match);
 
-        int matchId = match.getMatchId();
+        long matchId = match.getMatchId();
         int tourId = match.getTourId();
         int playerOneId = match.getPlayerOneId();
         int playerTwoId = match.getPlayerTwoId();
@@ -145,18 +153,18 @@ public class TournamentController {
         int winnerScore = Math.max(playerOneScore, playerTwoScore);
         int loserScore = Math.min(playerOneScore, playerTwoScore);
 
-        System.err.println("winnerId:: "+winnerId);
-        System.err.println("loserId:: "+loserId);
-        System.err.println("winnerScore:: "+winnerScore);
-        System.err.println("loserScore:: "+loserScore);
+//        System.err.println("winnerId:: "+winnerId);
+//        System.err.println("loserId:: "+loserId);
+//        System.err.println("winnerScore:: "+winnerScore);
+//        System.err.println("loserScore:: "+loserScore);
 
-        int x1 = matchService.updateMatchScore(playerOneScore, playerTwoScore, winnerId, matchId);
+        int x1 = matchService.updateMatchScore(playerOneScore, playerTwoScore, winnerId, (int) matchId);
         int x2 = pointsTableService.updatePointsTablePlayerWinStats(winnerScore, winnerId, tourId);
         int x3 = pointsTableService.updatePointsTablePlayerLossStats(loserScore, loserId, tourId);
         int x4 = playerService.updatePlayerWinStats(winnerScore, winnerId);
         int x5 = playerService.updatePlayerLossStats(loserScore, loserId);
 
-        System.err.println("X!:   "+x1+x2+x3+x4+x5);
+//        System.err.println("X!:   "+x1+x2+x3+x4+x5);
         return "redirect:/tournament/"+tourId;
     }
 }
