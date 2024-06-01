@@ -24,18 +24,18 @@
         <h3>Create Tournament</h3>
         <!--        <p>Id: <input type="text" th:field="*{tournamentId}" /></p>-->
         <div class="row">
-            <div class="form-group col">
+            <div class="form-group col-lg-4 col-sm-6">
                 <p>Give A Name: <input class="form-control" type="text" th:field="*{tournamentName}"/></p>
                 <p th:if="${#fields.hasErrors('tournamentName')}" th:errors="*{tournamentName}">Name Error</p>
             </div>
-            <div class="form-group col">
+            <div class="form-group col-lg-4 col-sm-6">
                 <p>Duration: <input class="form-control" type="text" th:field="*{duration}"/></p>
             </div>
-            <div class="form-group col">
-                <p>Player Count: <input class="form-control" type="text" th:field="*{playerCount}"/></p>
-            </div>
-            <div class="form-group col">
-                <label for="playerList">Player Select:</label>
+<!--            <div class="form-group col">-->
+<!--                <p>Player Count: <input class="form-control" type="text" th:field="*{playerCount}"/></p>-->
+<!--            </div>-->
+            <div class="form-group col-lg-4 col-sm-6">
+                <label for="playerList" style="margin-bottom:0px !important">Player Select:</label>
                 <select multiple class="form-control" th:field="*{playerList}" id="playerList">
 <!--                    <option value="0">select operator</option>-->
                     <option th:each="player:${playerList}" th:value="${player.playerId}"
@@ -128,6 +128,10 @@
       placeholder: 'Select an option',
       templateResult: formatState
     });
+
+<!--    $('#playerList').on("select2:selecting", function(e) {-->
+<!--       alert():-->
+<!--    });-->
 </script>
 </body>
 </html>

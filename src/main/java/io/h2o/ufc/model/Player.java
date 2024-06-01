@@ -23,8 +23,9 @@ public class Player {
     private int totalWins;
     private float winPercent;
 
-    public Player(int playerId, int matchPlayed, int score, int totalWins, float winPercent) {
+    public Player(int playerId, String playerName,int matchPlayed, int score, int totalWins, float winPercent) {
         this.playerId = playerId;
+        this.playerName = playerName;
         this.matchPlayed = matchPlayed;
         this.score = score;
         this.totalWins = totalWins;

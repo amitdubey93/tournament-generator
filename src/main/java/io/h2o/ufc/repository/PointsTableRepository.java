@@ -27,6 +27,7 @@ public interface PointsTableRepository extends JpaRepository<PointsTable, Intege
 
     //@Query(value = "select sum(score) as score, sum(won) as won, sum(match_played) as matches_played, round(( sum(won)/sum(match_played) * 100 ),2) as win_percent, player_id from points_table group by player_id", nativeQuery = true)
 //    @Query("select playerId, sum(score) as score, sum(won) as won, sum(matchPlayed) as matchPlayed, round(( sum(won)/sum(matchPlayed) * 100 ),2) as winPercent, sum(lost) as lost, tournament.tournamentId from PointsTable group by playerId")
-    @Query("select new io.h2o.ufc.model.Player(pt.playerId, cast(sum(pt.matchPlayed) as integer), cast(sum(pt.score) as integer), cast(sum(pt.won) as integer), cast(round(( sum(pt.won)/sum(pt.matchPlayed) * 100 ),2) as integer )) from PointsTable as pt group by playerId")
+    @Query("select new io.h2o.ufc.model.Player(pl.playerId, pl.playerName, cast(ifnull(sum(pt.matchPlayed),0) as integer), cast(ifnull(sum(pt.score), 0) as integer), cast(ifnull(sum(pt.won), 0) as integer), cast(ifnull(round(( sum(pt.won)/sum(pt.matchPlayed) * 100 ),4), 0) as integer )) " +
+            "from PointsTable pt right join Player pl on pl.playerId= pt.playerId group by pl.playerId order by cast(ifnull(sum(pt.score), 0) as integer) desc")
     public List<Player> getPlayerData();
 }
