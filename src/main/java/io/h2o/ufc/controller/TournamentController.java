@@ -1,16 +1,14 @@
 package io.h2o.ufc.controller;
 
 import io.h2o.ufc.ScheduleGenerator;
-import io.h2o.ufc.model.Match;
 import io.h2o.ufc.model.Player;
 import io.h2o.ufc.model.PointsTable;
 import io.h2o.ufc.model.Tournament;
-import io.h2o.ufc.service.MatchService;
+import io.h2o.ufc.model.TournamentMatch;
 import io.h2o.ufc.service.PlayerService;
 import io.h2o.ufc.service.PointsTableService;
+import io.h2o.ufc.service.TournamentMatchService;
 import io.h2o.ufc.service.TournamentService;
-//import jakarta.validation.Valid;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +36,7 @@ public class TournamentController {
     private PlayerService playerService;
 
     @Autowired
-    private MatchService matchService;
+    private TournamentMatchService tournamentMatchService;
 
     @Autowired
     private PointsTableService pointsTableService;
@@ -48,7 +45,22 @@ public class TournamentController {
 
     @GetMapping("/tournament")
     public String tournaments(Tournament tournament, Model model) {
-        model.addAttribute("tournamentList", tournamentService.findAll());
+
+        List<Tournament> tournamentList = tournamentService.findAll();
+
+        tournamentList.stream().forEach(tournament1 -> {
+            tournament1.getTournamentMatchList().stream().forEach(match -> {
+                if (match.getWinner() == 0) {
+//                    System.err.println(match.getWinner());
+                    tournament1.setAllMatchCompleted(false);
+                } else {
+//                    System.err.println(match.getWinner());
+                    tournament1.setAllMatchCompleted(true);
+                }
+            });
+            tournament1.setPlayerCount(tournament1.getPointsTable().size());
+        });
+        model.addAttribute("tournamentList", tournamentList);
         model.addAttribute("matchList", null);
         model.addAttribute("playerList", playerService.findAll());
         return "tournament";
@@ -63,10 +75,10 @@ public class TournamentController {
 
         System.err.println("playerMap:: "+playerMap);
         Tournament tournament = tournamentService.findById(id);
-        Collection<Match> matchList = tournament.getMatchList();
+        Collection<TournamentMatch> tournamentMatchList = tournament.getTournamentMatchList();
 
 
-       matchList.stream().forEach(match ->
+        tournamentMatchList.stream().forEach(match ->
        {
            match.setPlayerOneImagePath("../"+playerMap.get(match.getPlayerOneId()).getImagePath());
            match.setPlayerTwoImagePath("../"+playerMap.get(match.getPlayerTwoId()).getImagePath());
@@ -90,14 +102,14 @@ public class TournamentController {
         model.addAttribute("duration", tournament.getDuration());
         model.addAttribute("playerCount", tournament.getPlayerCount());
         model.addAttribute("playerParticipated", tournament.getPointsTable().size());
-        model.addAttribute("totalMatches", matchList.size());
-        model.addAttribute("playedMatches", matchList.stream().filter(match -> match.getWinner() != 0).count());
+        model.addAttribute("totalMatches", tournamentMatchList.size());
+        model.addAttribute("playedMatches", tournamentMatchList.stream().filter(match -> match.getWinner() != 0).count());
 
-        model.addAttribute("matchList", matchList);
+        model.addAttribute("tournamentMatchList", tournamentMatchList);
         model.addAttribute("pointsTable", pointsTable);
 
-        model.addAttribute("match", new Match());
-        return "match";
+        model.addAttribute("tournamentMatch", new TournamentMatch());
+        return "tournament_info";
     }
 
     @PostMapping("/tournament")
@@ -116,7 +128,7 @@ public class TournamentController {
         //List<String> players = List.of("Amit", "Ananya", "Suryansh", "Upendra", "Shivam", "Biswajeet");
         //System.err.println(players);
         log.info("players:: "+players);
-        List<Match> schedule = generator.generateSchedule(tournament, players);
+        List<TournamentMatch> schedule = generator.generateSchedule(tournament, players);
         List<PointsTable> pointsTable = tournament.getPlayerList().stream().map(player -> {
             return new PointsTable().builder()
                     .playerId((int) player.getPlayerId())
@@ -128,7 +140,7 @@ public class TournamentController {
                     .build();
         }).toList();
 
-        tournament.setMatchList(schedule);
+        tournament.setTournamentMatchList(schedule);
         tournament.setPointsTable(pointsTable);
         tournamentService.save(tournament);
         model.addAttribute("tournamentList", tournamentService.findAll());
@@ -136,35 +148,5 @@ public class TournamentController {
         return "redirect:tournament";
     }
 
-    @PostMapping("/match/update")
-    @Transactional
-    public String updateMatchScore(@Valid Match match, BindingResult result, Model model){
-//        System.err.println(match);
 
-        long matchId = match.getMatchId();
-        int tourId = match.getTourId();
-        int playerOneId = match.getPlayerOneId();
-        int playerTwoId = match.getPlayerTwoId();
-        int playerOneScore = match.getPlayerOneScore();
-        int playerTwoScore = match.getPlayerTwoScore();
-
-        int winnerId = playerOneScore > playerTwoScore ? playerOneId : playerTwoId;
-        int loserId = playerOneScore < playerTwoScore ? playerOneId : playerTwoId;
-        int winnerScore = Math.max(playerOneScore, playerTwoScore);
-        int loserScore = Math.min(playerOneScore, playerTwoScore);
-
-//        System.err.println("winnerId:: "+winnerId);
-//        System.err.println("loserId:: "+loserId);
-//        System.err.println("winnerScore:: "+winnerScore);
-//        System.err.println("loserScore:: "+loserScore);
-
-        int x1 = matchService.updateMatchScore(playerOneScore, playerTwoScore, winnerId, (int) matchId);
-        int x2 = pointsTableService.updatePointsTablePlayerWinStats(winnerScore, winnerId, tourId);
-        int x3 = pointsTableService.updatePointsTablePlayerLossStats(loserScore, loserId, tourId);
-        int x4 = playerService.updatePlayerWinStats(winnerScore, winnerId);
-        int x5 = playerService.updatePlayerLossStats(loserScore, loserId);
-
-//        System.err.println("X!:   "+x1+x2+x3+x4+x5);
-        return "redirect:/tournament/"+tourId;
-    }
 }

@@ -1,7 +1,12 @@
 package io.h2o.ufc.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
@@ -23,12 +28,19 @@ public class Player {
     private int totalWins;
     private float winPercent;
 
-    public Player(int playerId, String playerName,int matchPlayed, int score, int totalWins, float winPercent) {
+    public Player(int playerId, String playerName, int matchPlayed, int score, int totalWins, float winPercent) {
         this.playerId = playerId;
         this.playerName = playerName;
         this.matchPlayed = matchPlayed;
         this.score = score;
         this.totalWins = totalWins;
         this.winPercent = winPercent;
+    }
+
+    public Player(long matchPlayed, long totalWins, long score, long winPercent) {
+        this.matchPlayed = (int) matchPlayed;
+        this.totalWins = (int) totalWins;
+        this.score = (int) score;
+        this.winPercent = (float) winPercent;
     }
 }

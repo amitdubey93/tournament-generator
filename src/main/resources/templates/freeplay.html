@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Free Play Info</title>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}">...</div>
+<div class="container my-2">
+
+    <div>
+        <form action="#" id="freePlayForm" method="post" style="margin-bottom:20px" th:action="@{/freePlay}"
+              th:object="${freePlayMatch}">
+
+            <h3>Create FreePlay Match</h3>
+            <div class="row">
+
+                <div class="form-group col-lg-4 col-sm-6">
+                    <label for="playerOneId" style="margin-bottom:0px !important">Player One Select:</label>
+                    <select class="form-control" id="playerOneSelect" th:field="*{playerOneId}">
+                        <!--                        <option value="0">Select Player</option>-->
+                        <option th:each="player:${playerList}" th:text="${player.playerName}"
+                                th:value="${player.playerId}"></option>
+                    </select>
+                </div>
+                <div class="form-group col-lg-4 col-sm-6">
+                    <label for="playerTwoId" style="margin-bottom:0px !important">Player One Select:</label>
+                    <select class="form-control" id="playerTwoSelect" th:field="*{playerTwoId}">
+                        <!--                        <option value="0">Select Player</option>-->
+                        <option th:each="player:${playerList}" th:text="${player.playerName}"
+                                th:value="${player.playerId}"></option>
+                    </select>
+                </div>
+            </div>
+            <p>
+                <input class="btn btn-primary" type="submit" value="Submit"/>
+                <input class="btn btn-secondary" type="reset" value="Reset"/>
+            </p>
+
+        </form>
+    </div>
+    <div>
+        <h3>FreePlay Matches</h3>
+        <table class="table table-striped table-responsive-md" id="freePlayTable">
+            <thead>
+            <tr>
+                <th>Match No</th>
+                <th>Player One</th>
+                <th>Player Two</th>
+                <th>Player One Score</th>
+                <th>Player Two Score</th>
+                <th>Winner</th>
+                <th>Update</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="freePlayMatch:${freePlayList}">
+                <td th:text="${freePlayMatch.freePlayId}"></td>
+                <td th:text="${freePlayMatch.playerOneName}"></td>
+                <td th:text="${freePlayMatch.playerTwoName}"></td>
+                <td th:text="${freePlayMatch.playerOneScore}"></td>
+                <td th:text="${freePlayMatch.playerTwoScore}"></td>
+                <td th:text="${freePlayMatch.winnerName}"></td>
+                <!--                <td><a th:if="${freePlayMatch.winner == 0}" class="btn btn-primary" onclick="openModal(this)">Update</a>-->
+                <!--                </td>-->
+                <td>
+                    <button class="btn btn-primary"
+                            onclick="openModal(this)"
+                            th:data-freeplayid="${freePlayMatch.freePlayId}"
+                            th:data-playeroneid="${freePlayMatch.playerOneId}"
+                            th:data-playeroneimagepath="${freePlayMatch.playerOneImagePath}"
+                            th:data-playeronescore="${freePlayMatch.playerOneScore}"
+                            th:data-playertwoid="${freePlayMatch.playerTwoId}"
+                            th:data-playertwoimagepath="${freePlayMatch.playerTwoImagePath}"
+                            th:data-playertwoscore="${freePlayMatch.playerTwoScore}"
+                            th:if="${freePlayMatch.winner == 0}">Update
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="updateModalLabel" class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="#" id="freePlayUpdateForm" th:action="@{/freePlay}" th:method="put"
+                      th:object="${freePlayMatch}">
+                    <!--                <form th:action="@{/tournamentMatch/update/}" th:object="${tournamentMatch}" method="post">-->
+                    <div class="modal-header">
+                        <h5 class="modal-title mr-3" id="updateModalLabel">Match No: </h5>
+                        <h5 id="matchNo">23</h5>
+                        <button aria-label="Close" class="close" data-dismiss="modal" type="button"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input id="freePlayId" th:field="*{freePlayId}" type="hidden">
+                        <input id="playerOneId" th:field="*{playerOneId}" type="hidden">
+                        <input id="playerTwoId" th:field="*{playerTwoId}" type="hidden">
+
+
+                        <div class="mb-3 d-flex justify-content-around">
+                            <img class="img-circle" id="playerOneImagePath"
+                                 th:src="${freePlayMatch.playerOneImagePath}"/>
+                            <h3 style="padding-top: 20px;">vs</h3>
+                            <img class="img-circle" id="playerTwoImagePath"
+                                 th:src="${freePlayMatch.playerTwoImagePath}"/>
+                        </div>
+                        <div class="mb-3 row">
+                            <div class="col-6">
+                                <label class="form-label" for="playerOneScore">Player One Score</label>
+                                <input class="form-control" id="playerOneScore" th:field="*{playerOneScore}"
+                                       type="number">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label" for="playerTwoScore">Player Two Score</label>
+                                <input class="form-control" id="playerTwoScore" th:field="*{playerTwoScore}"
+                                       type="number">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-primary" type="submit">Update Score</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal(button) {
+          const freePlayId = button.getAttribute("data-freeplayid");
+          const playerOneImagePath = button.getAttribute("data-playeroneimagepath");
+          const playerTwoImagePath = button.getAttribute("data-playertwoimagepath");
+          const playerOneId = button.getAttribute("data-playeroneid");
+          const playerTwoId = button.getAttribute("data-playertwoid");
+          const playerOneScore = button.getAttribute("data-playeronescore");
+          const playerTwoScore = button.getAttribute("data-playertwoscore");
+
+          //console.log(matchId+" "+playerOne);
+
+          document.getElementById("freePlayId").value = freePlayId;
+          document.getElementById("matchNo").innerHTML = freePlayId;
+          document.getElementById("playerOneImagePath").src = playerOneImagePath;
+          document.getElementById("playerTwoImagePath").src = playerTwoImagePath;
+          document.getElementById("playerOneId").value = playerOneId;
+          document.getElementById("playerTwoId").value = playerTwoId;
+          document.getElementById("playerOneScore").value = playerOneScore;
+          document.getElementById("playerTwoScore").value = playerTwoScore;
+
+          console.log(playerOneId);
+          console.log(playerTwoId);
+          const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
+          updateModal.show();
+      }
+
+    new DataTable('#freePlayTable');
+
+    $('#freePlayUpdateForm').submit(function() {
+        if ($('#playerOneScore').val() == $('#playerTwoScore').val()) {
+          alert("Player's Score Can't Be Same");
+          return false;
+        } else { return true; }
+    });
+
+    $(document).ready(function() {
+
+        $('#playerTwoSelect option[value="1"]').remove();
+
+        $('#playerOneSelect').on('change', function() {
+            $('#playerTwoSelect').html($('#playerOneSelect').html());
+            var selectedValue = $(this).val();
+            $('#playerTwoSelect option').each(function() {
+                if ($(this).val() == selectedValue) {
+                    $(this).remove();
+                }
+            });
+        });
+    });
+
+    <!--    function formatState (state) {-->
+    <!--          if (!state.id) {-->
+    <!--            return state.text;-->
+    <!--          }-->
+    <!--          var $state = $(-->
+    <!--            '<span><img src="' + '../images/' + state.element.text.toLowerCase() + '.jpg" class="img-flag" style="width:20px"/> ' + state.text + '</span>'-->
+    <!--          );-->
+    <!--          return $state;-->
+    <!--        };-->
+
+    <!--        $('#playerOneSelect').select2({-->
+    <!--          placeholder: 'Select Player One',-->
+    <!--          templateResult: formatState-->
+    <!--        });-->
+    <!--        $('#playerTwoSelect').select2({-->
+    <!--          placeholder: 'Select Player Two',-->
+    <!--          templateResult: formatState-->
+    <!--        });-->
+
+    <!--        $('#playerOneId').on("select2:selecting", function(e) {-->
+    <!--           console.log("selected player:: "+e.params.args.data.id);-->
+    <!--           console.log(e);-->
+    <!--           $('#playerOneId option[value="+e.params.args.data.id+"]').remove();-->
+    <!--           console.log("selected player:: "+e.params.args.data.id);-->
+    <!--        });-->
+
+</script>
+</body>
+</html>

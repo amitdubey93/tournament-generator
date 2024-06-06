@@ -1,15 +1,15 @@
 package io.h2o.ufc;
 
-import io.h2o.ufc.model.Match;
 import io.h2o.ufc.model.Tournament;
+import io.h2o.ufc.model.TournamentMatch;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScheduleGenerator {
 
-    public List<Match> generateSchedule(Tournament tournament, List<Integer> players) {
-        List<Match> schedule = new ArrayList<>();
+    public List<TournamentMatch> generateSchedule(Tournament tournament, List<Integer> players) {
+        List<TournamentMatch> schedule = new ArrayList<>();
         int numPlayers = players.size();
         int matchNo = 1;
         int totalRounds = numPlayers - 1;
@@ -19,7 +19,7 @@ public class ScheduleGenerator {
                 int playerOne = players.get(i);
                 int playerTwo = players.get((i + round) % numPlayers);
 
-                schedule.add(Match.builder()
+                schedule.add(TournamentMatch.builder()
                         .tournament(tournament)
                         .matchNo(matchNo++)
                         .roundNo(round)

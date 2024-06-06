@@ -1,8 +1,6 @@
 package io.h2o.ufc.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -29,8 +27,8 @@ public class Tournament {
     @Size(min=2, max=30)
     private String tournamentName;
 
-    @Transient
-    private Object playerIds;
+//    @Transient
+//    private Object playerIds;
 
     @Transient
     private List<Player> playerList;
@@ -38,13 +36,18 @@ public class Tournament {
     @NotNull
     private String duration;
 
-    @NotNull
-    @Min(4)
+    //    @NotNull
+//    @Min(4)
+    @Transient
     private int playerCount;
+
+
+    @Transient
+    private boolean allMatchCompleted;
 
     @OneToMany(mappedBy="tournament",cascade=CascadeType.ALL)
     @ToString.Exclude
-    private Collection<Match> matchList = new ArrayList<>();
+    private Collection<TournamentMatch> tournamentMatchList = new ArrayList<>();
 
     @OneToMany(mappedBy="tournament",cascade=CascadeType.ALL)
     @ToString.Exclude

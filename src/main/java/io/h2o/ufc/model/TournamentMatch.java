@@ -1,7 +1,10 @@
 package io.h2o.ufc.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Data
@@ -9,12 +12,12 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "matches")
-public class Match {
+@Table(name = "tournament_matches")
+public class TournamentMatch {
 
     @Id
-    @SequenceGenerator(name = "match_sequence", sequenceName = "match_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "match_sequence")
+    @SequenceGenerator(name = "tournament_match_sequence", sequenceName = "tournament_match_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tournament_match_sequence")
     private int matchId;
 
     @ManyToOne

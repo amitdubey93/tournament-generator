@@ -4,21 +4,13 @@
     <meta charset="ISO-8859-1">
     <title>Tournament Generator</title>
 
-    <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->
-    <!--    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
-    <!--    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>-->
-    <!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>-->
-
-
-    <!--    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />-->
-    <!--    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>-->
 </head>
 <body>
 <!--<div th:replace="fragments/head_script :: head_script">...</div>-->
 <div th:replace="~{fragments/header :: header}">...</div>
 <div class="container my-5">
 
-    <form action="#" th:action="@{/tournament}" th:object="${tournament}" method="post"
+    <form action="#" id="tournamentForm" method="post" th:action="@{/tournament}" th:object="${tournament}"
           style="margin-bottom:20px">
 
         <h3>Create Tournament</h3>
@@ -28,9 +20,9 @@
                 <p>Give A Name: <input class="form-control" type="text" th:field="*{tournamentName}"/></p>
                 <p th:if="${#fields.hasErrors('tournamentName')}" th:errors="*{tournamentName}">Name Error</p>
             </div>
-            <div class="form-group col-lg-4 col-sm-6">
-                <p>Duration: <input class="form-control" type="text" th:field="*{duration}"/></p>
-            </div>
+            <!--            <div class="form-group col-lg-4 col-sm-6">-->
+            <!--                <p>Duration: <input class="form-control" type="text" th:field="*{duration}"/></p>-->
+            <!--            </div>-->
 <!--            <div class="form-group col">-->
 <!--                <p>Player Count: <input class="form-control" type="text" th:field="*{playerCount}"/></p>-->
 <!--            </div>-->
@@ -58,12 +50,13 @@
 
 
     <h3 th:if="${tournamentList}">Tournaments</h3>
-    <table th:if="${tournamentList}" style="width:98%" class="table table-striped table-responsive-md">
+    <table class="table table-striped table-responsive-md" id="tournamentTable" style="width:98%"
+           th:if="${tournamentList}">
         <thead>
         <tr>
             <th>Id</th>
             <th>Name</th>
-            <th>Duration</th>
+            <!--            <th>Duration</th>-->
             <th>Player Count</th>
             <th>View Schedule</th>
         </tr>
@@ -72,48 +65,24 @@
         <tr th:each="tournament:${tournamentList}">
             <td th:text="${tournament.tournamentId}"></td>
             <td th:text="${tournament.tournamentName}"></td>
-            <td th:text="${tournament.duration}"></td>
+            <!--            <td th:text="${tournament.duration}"></td>-->
             <td th:text="${tournament.playerCount}"></td>
-
-
-            <td><a th:href="@{/tournament/{id}(id=${tournament.tournamentId})}"
-                   class="btn btn-primary">View</a>
+            <td><a class="btn btn-secondary"
+                   th:href="@{/tournament/{id}(id=${tournament.tournamentId})}"
+                   th:if="${tournament.allMatchCompleted == true}">Completed</a>
+                <a class="btn btn-primary"
+                   th:href="@{/tournament/{id}(id=${tournament.tournamentId})}"
+                   th:if="${tournament.allMatchCompleted == false}">&nbsp;&nbsp;Pending&nbsp;&nbsp;</a>
             </td>
+            <!--            <td><a th:href="@{/tournament/{id}(id=${tournament.tournamentId})}"-->
+            <!--                   class="btn btn-primary">View</a>-->
+            <!--            </td>-->
         </tr>
         </tbody>
     </table>
 
-    <h3 th:if="${matchList}">Schedule</h3>
-
-    <table th:if="${matchList}" style="width:98%" class="table table-striped table-responsive-md">
-        <thead>
-        <tr>
-            <!--            <th>Id</th>-->
-            <th>Round No</th>
-            <th>Match No</th>
-            <th>Player One</th>
-            <th>Player Two</th>
-            <th>Player One Score</th>
-            <th>Player Two Score</th>
-            <th>Winner</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="match:${matchList}">
-            <!--            <td th:text="${match.matchId}"></td>-->
-            <td th:text="${match.roundNo}"></td>
-            <td th:text="${match.matchNo}"></td>
-            <td th:text="${match.playerOne}"></td>
-            <td th:text="${match.playerTwo}"></td>
-            <td th:text="${match.playerOneScore}"></td>
-            <td th:text="${match.playerTwoScore}"></td>
-            <td th:text="${match.winner}"></td>
-        </tr>
-        </tbody>
-    </table>
 </div>
 <script>
-
     function formatState (state) {
       if (!state.id) {
         return state.text;
@@ -125,9 +94,23 @@
     };
 
     $('#playerList').select2({
-      placeholder: 'Select an option',
+      placeholder: 'Select Multiple Players',
       templateResult: formatState
     });
+
+
+    $('#tournamentForm').submit(function() {
+        if ($('#tournamentName').val() == "") {
+          alert("Please Enter Tournament Name");
+          return false;
+        } else { return true; }
+        alert($('#playerList').val());
+        console($('#playerList'));
+        console($('#playerList').size());
+        console($('#playerList').length());
+
+    });
+    //new DataTable('#tournamentTable');
 
 <!--    $('#playerList').on("select2:selecting", function(e) {-->
 <!--       alert():-->
