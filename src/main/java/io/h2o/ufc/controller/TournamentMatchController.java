@@ -46,7 +46,7 @@ public class TournamentMatchController {
 //        System.err.println("winnerScore:: "+winnerScore);
 //        System.err.println("loserScore:: "+loserScore);
 
-        int x1 = tournamentMatchService.updateMatchScore(playerOneScore, playerTwoScore, winnerId, (int) matchId);
+        int x1 = tournamentMatchService.updateTournamentMatchScore(playerOneScore, playerTwoScore, winnerId, (int) matchId);
         int x2 = pointsTableService.updatePointsTablePlayerWinStats(winnerScore, winnerId, tourId);
         int x3 = pointsTableService.updatePointsTablePlayerLossStats(loserScore, loserId, tourId);
         int x4 = playerService.updatePlayerWinStats(winnerScore, winnerId);

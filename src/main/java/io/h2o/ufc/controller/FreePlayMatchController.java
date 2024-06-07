@@ -56,6 +56,9 @@ public class FreePlayMatchController {
     @PostMapping("/freePlay")
     public String createFreePlayMatch(@ModelAttribute("freePlayMatch") FreePlayMatch freePlayMatch, BindingResult bindingResult, Model model) {
 
+//        System.err.println(new Date());
+//        freePlayMatch.setMatchTime(new Date());
+
         freePlayMatchService.save(freePlayMatch);
         return "redirect:freePlay";
     }

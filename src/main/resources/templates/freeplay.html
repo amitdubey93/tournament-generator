@@ -16,7 +16,7 @@
             <div class="row">
 
                 <div class="form-group col-lg-4 col-sm-6">
-                    <label for="playerOneId" style="margin-bottom:0px !important">Player One Select:</label>
+                    <label for="playerOneSelect" style="margin-bottom:0px !important">Player One Select:</label>
                     <select class="form-control" id="playerOneSelect" th:field="*{playerOneId}">
                         <!--                        <option value="0">Select Player</option>-->
                         <option th:each="player:${playerList}" th:text="${player.playerName}"
@@ -24,7 +24,7 @@
                     </select>
                 </div>
                 <div class="form-group col-lg-4 col-sm-6">
-                    <label for="playerTwoId" style="margin-bottom:0px !important">Player One Select:</label>
+                    <label for="playerTwoSelect" style="margin-bottom:0px !important">Player One Select:</label>
                     <select class="form-control" id="playerTwoSelect" th:field="*{playerTwoId}">
                         <!--                        <option value="0">Select Player</option>-->
                         <option th:each="player:${playerList}" th:text="${player.playerName}"
@@ -47,9 +47,10 @@
                 <th>Match No</th>
                 <th>Player One</th>
                 <th>Player Two</th>
-                <th>Player One Score</th>
-                <th>Player Two Score</th>
+                <th>P1 Score</th>
+                <th>P2 Score</th>
                 <th>Winner</th>
+                <th>Match Time</th>
                 <th>Update</th>
             </tr>
             </thead>
@@ -61,6 +62,7 @@
                 <td th:text="${freePlayMatch.playerOneScore}"></td>
                 <td th:text="${freePlayMatch.playerTwoScore}"></td>
                 <td th:text="${freePlayMatch.winnerName}"></td>
+                <td th:text="${#dates.format(freePlayMatch.matchTime, 'dd-MMM-yyyy HH:mm')}"></td>
                 <!--                <td><a th:if="${freePlayMatch.winner == 0}" class="btn btn-primary" onclick="openModal(this)">Update</a>-->
                 <!--                </td>-->
                 <td>

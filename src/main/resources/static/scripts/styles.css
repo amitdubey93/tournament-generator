@@ -13,3 +13,13 @@
 .container{
     width:85% !important;
 }
+
+.alert-time{
+    padding: 0.4rem 1.25rem !important;
+    margin-bottom: 0rem !important;
+}
+form{
+    margin-bottom: 3rem !important;
+}
+
+

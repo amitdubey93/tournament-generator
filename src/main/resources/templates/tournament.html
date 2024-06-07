@@ -58,6 +58,7 @@
             <th>Name</th>
             <!--            <th>Duration</th>-->
             <th>Player Count</th>
+            <th>Date</th>
             <th>View Schedule</th>
         </tr>
         </thead>
@@ -67,6 +68,8 @@
             <td th:text="${tournament.tournamentName}"></td>
             <!--            <td th:text="${tournament.duration}"></td>-->
             <td th:text="${tournament.playerCount}"></td>
+            <!--            <td th:text="${tournament.tournamentDate}"></td>-->
+            <td th:text="${#dates.format(tournament.tournamentDate, 'dd-MMM-yyyy HH:mm')}"></td>
             <td><a class="btn btn-secondary"
                    th:href="@{/tournament/{id}(id=${tournament.tournamentId})}"
                    th:if="${tournament.allMatchCompleted == true}">Completed</a>

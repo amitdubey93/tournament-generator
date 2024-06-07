@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,6 +50,9 @@ public class TournamentController {
         List<Tournament> tournamentList = tournamentService.findAll();
 
         tournamentList.stream().forEach(tournament1 -> {
+//            tournament1.getTournamentMatchList().stream().forEach(match -> {
+//
+//            } );
             tournament1.getTournamentMatchList().stream().forEach(match -> {
                 if (match.getWinner() == 0) {
 //                    System.err.println(match.getWinner());
@@ -61,7 +65,7 @@ public class TournamentController {
             tournament1.setPlayerCount(tournament1.getPointsTable().size());
         });
         model.addAttribute("tournamentList", tournamentList);
-        model.addAttribute("matchList", null);
+        //model.addAttribute("matchList", null);
         model.addAttribute("playerList", playerService.findAll());
         return "tournament";
     }
@@ -99,6 +103,7 @@ public class TournamentController {
 
         model.addAttribute("tournamentId", tournament.getTournamentId());
         model.addAttribute("tournamentName", tournament.getTournamentName());
+        model.addAttribute("tournamentDate", tournament.getTournamentDate());
         model.addAttribute("duration", tournament.getDuration());
         model.addAttribute("playerCount", tournament.getPlayerCount());
         model.addAttribute("playerParticipated", tournament.getPointsTable().size());
@@ -142,6 +147,7 @@ public class TournamentController {
 
         tournament.setTournamentMatchList(schedule);
         tournament.setPointsTable(pointsTable);
+        tournament.setTournamentDate(new Date());
         tournamentService.save(tournament);
         model.addAttribute("tournamentList", tournamentService.findAll());
         //model.addAttribute("matchList", null);

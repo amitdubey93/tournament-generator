@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,7 +30,7 @@ public class FreePlayMatchService {
     }
 
     public int updateFreePlayMatchScore(int playerOneScore, int playerTwoScore, int winner, int freePlayId) {
-        return freePlayMatchRepository.updateFreePlayMatchScore(playerOneScore, playerTwoScore, winner, freePlayId);
+        return freePlayMatchRepository.updateFreePlayMatchScore(playerOneScore, playerTwoScore, winner, freePlayId, new Date());
     }
 
     public Player getPlayerData(int playerId) {

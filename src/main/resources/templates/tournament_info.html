@@ -22,15 +22,31 @@
                 <div class="card-header" th:text="${tournamentName}">Tournament Name</div>
                 <div class="card-body">
                     <h5 class="card-title">Tournament Details</h5>
-                    Players Participated: <p class="card-text" th:text="${playerParticipated}">7</p>
-                    Total Matches: <p class="card-text" th:text="${totalMatches}">42</p>
-                    Completed Matches: <p class="card-text" th:text="${playedMatches}">13</p>
+                    <!--                    <p th:text="${tournamentDate}">08-Jun-2024 01:11</p>-->
+                    <!--                    <p th:text="${#dates.format(tournamentDate, 'dd-MMM-yyyy')}">08-Jun-2024 01:11</p>-->
+                    <!--                    Players Participated: <span class="card-text" th:text="${playerParticipated}">7</span>-->
+                    <!--                    Total Matches: <span class="card-text" th:text="${totalMatches}">42</span>-->
+                    <!--                    Completed Matches: <span class="card-text" th:text="${playedMatches}">13</span>-->
+                    <div class="row">
+                        <div class="col-sm-6 col-md-12">
+                            <p th:text="${#dates.format(tournamentDate, 'dd-MMM-yyyy')}">08-Jun-2024 01:11</p>
+                        </div>
+                        <div class="col-sm-6 col-md-12">
+                            Players Participated: <span class="card-text" th:text="${playerParticipated}">7</span>
+                        </div>
+                        <div class="col-sm-6 col-md-12">
+                            Total Matches: <span class="card-text" th:text="${totalMatches}">42</span>
+                        </div>
+                        <div class="col-sm-6 col-md-12">
+                            Completed Matches: <span class="card-text" th:text="${playedMatches}">13</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-lg-8 col-sm-12">
             <h2 th:if="${pointsTable}">Points Table</h2>
-            <table th:if="${pointsTable}" class = "table table-striped table-responsive-md">
+            <table class="table table-striped table-responsive" id="pointsTable" th:if="${pointsTable}">
                 <thead>
                 <tr>
                     <th>Player Name</th>
@@ -74,7 +90,9 @@
                     <h5>Score : <span th:text="${tournamentMatch.playerOneScore}"/> - <span
                             th:text="${tournamentMatch.playerTwoScore}"/></h5>
                     <br>
-                    <button th:data-matchid="${tournamentMatch.matchId}"
+                    <button
+                            th:data-matchid="${tournamentMatch.matchId}"
+                            th:if="${tournamentMatch.winner == 0}"
                             class="btn btn-primary"
                             th:data-tourid="${tournamentId}"
                             th:data-matchno="${tournamentMatch.matchNo}"
@@ -85,8 +103,12 @@
                             th:data-playertwoimagepath="${tournamentMatch.playerTwoImagePath}"
                             th:data-playertwoscore="${tournamentMatch.playerTwoScore}"
                             th:data-roundno="${tournamentMatch.roundNo}"
-                            th:if="${tournamentMatch.winner == 0}"
                             onclick="openModal(this)">Update</button>
+
+                    <div class="alert alert-secondary alert-time"
+                         th:if="${tournamentMatch.winner != 0}"
+                         th:text="${#dates.format(tournamentMatch.matchTime, 'dd-MMM-yyyy HH:mm')}">08-Jun-2024 01:11
+                    </div>
                 </div>
             </div>
         </div>
@@ -180,6 +202,13 @@
           alert("Player's Score Can't Be Same");
           return false;
         } else { return true; }
+    });
+
+    new DataTable('#pointsTable',{
+        info: false,
+        paging: false,
+        searching: false,
+        order: [ [4 , 'desc'] ]
     });
 </script>
 

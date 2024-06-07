@@ -7,12 +7,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 @Repository
 public interface FreePlayMatchRepository extends JpaRepository<FreePlayMatch, Integer> {
 
     @Modifying
-    @Query("UPDATE FreePlayMatch SET playerOneScore = :playerOneScore, playerTwoScore = :playerTwoScore, winner = :winner WHERE freePlayId= :freePlayId")
-    public int updateFreePlayMatchScore(int playerOneScore, int playerTwoScore, int winner, int freePlayId);
+    @Query("UPDATE FreePlayMatch SET playerOneScore = :playerOneScore, playerTwoScore = :playerTwoScore, winner = :winner, matchTime = :matchTime WHERE freePlayId= :freePlayId")
+    public int updateFreePlayMatchScore(int playerOneScore, int playerTwoScore, int winner, int freePlayId, Date matchTime);
 
     // Full query
 //    @Query("FROM FreePlayMatch ORDER BY freePlayId desc, winner")

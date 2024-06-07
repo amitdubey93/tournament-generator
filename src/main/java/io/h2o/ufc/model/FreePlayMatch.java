@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 
 @Data
 @AllArgsConstructor
@@ -33,6 +35,8 @@ public class FreePlayMatch {
     private int playerOneScore;
     private int playerTwoScore;
     private int winner;
+
+    private Date matchTime;
 
     @Transient
     private String playerOneName;
