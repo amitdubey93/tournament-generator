@@ -24,4 +24,9 @@ server:
 
 
 logging:
-  file: ufc.log
+  file:
+    path: /
+    name: ufc.log.txt
+  level:
+    com:
+      appsdeveloperblog: debug

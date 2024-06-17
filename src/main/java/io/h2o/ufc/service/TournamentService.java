@@ -26,4 +26,7 @@ public class TournamentService {
     }
 
 
+    public boolean updateFinalWinner(int winnerId, int tourId) {
+        return tournamentRepository.updateFinalWinner(winnerId, tourId) == 1;
+    }
 }

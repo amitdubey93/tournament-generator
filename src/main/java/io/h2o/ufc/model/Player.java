@@ -3,6 +3,7 @@ package io.h2o.ufc.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,14 +28,17 @@ public class Player {
     private int score;
     private int totalWins;
     private float winPercent;
+    @Transient
+    private float avgScore;
 
-    public Player(int playerId, String playerName, int matchPlayed, int score, int totalWins, float winPercent) {
+    public Player(int playerId, String playerName, int matchPlayed, int score, int totalWins, float winPercent, float avgScore) {
         this.playerId = playerId;
         this.playerName = playerName;
         this.matchPlayed = matchPlayed;
         this.score = score;
         this.totalWins = totalWins;
         this.winPercent = winPercent;
+        this.avgScore = avgScore;
     }
 
     public Player(long matchPlayed, long totalWins, long score, long winPercent) {

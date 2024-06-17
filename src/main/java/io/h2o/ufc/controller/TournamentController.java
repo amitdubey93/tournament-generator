@@ -48,22 +48,20 @@ public class TournamentController {
     public String tournaments(Tournament tournament, Model model) {
 
         List<Tournament> tournamentList = tournamentService.findAll();
-
+        Map<Integer, Player> playerMap = playerService.findAll().stream().collect(Collectors
+                .toMap(Player::getPlayerId, player -> player));
         tournamentList.stream().forEach(tournament1 -> {
-//            tournament1.getTournamentMatchList().stream().forEach(match -> {
-//
-//            } );
-            tournament1.getTournamentMatchList().stream().forEach(match -> {
-                if (match.getWinner() == 0) {
-//                    System.err.println(match.getWinner());
-                    tournament1.setAllMatchCompleted(false);
-                } else {
-//                    System.err.println(match.getWinner());
-                    tournament1.setAllMatchCompleted(true);
-                }
-            });
-            tournament1.setPlayerCount(tournament1.getPointsTable().size());
+//            boolean completedFlag = tournament1.getTournamentMatchList().stream()
+//                    .filter(tournamentMatch -> tournamentMatch.getWinner() == 0).count() == 0;
+//            tournament1.setAllMatchesCompleted(completedFlag);
+//            tournament1.setPlayerCount(tournament1.getPointsTable().size());
+
+            //change this approach || getting all players from db. only in need of one players name
+            if (tournament1.getWinner() != 0) {
+                tournament1.setWinnerName(playerMap.get(tournament1.getWinner()).getPlayerName());
+            }
         });
+
         model.addAttribute("tournamentList", tournamentList);
         //model.addAttribute("matchList", null);
         model.addAttribute("playerList", playerService.findAll());
@@ -77,11 +75,12 @@ public class TournamentController {
         Map<Integer, Player> playerMap = playerService.findAll().stream().collect(Collectors
                 .toMap(Player::getPlayerId, player -> player));
 
-        System.err.println("playerMap:: "+playerMap);
+        //System.err.println("playerMap:: "+playerMap);
         Tournament tournament = tournamentService.findById(id);
         Collection<TournamentMatch> tournamentMatchList = tournament.getTournamentMatchList();
 
 
+        //Collection<TournamentMatch> tournamentFinalsMatchList = tournamentMatchList.stream().filter(tournamentMatch -> tournamentMatch.getRoundNo() != 2001).toList();
         tournamentMatchList.stream().forEach(match ->
        {
            match.setPlayerOneImagePath("../"+playerMap.get(match.getPlayerOneId()).getImagePath());
@@ -104,16 +103,29 @@ public class TournamentController {
         model.addAttribute("tournamentId", tournament.getTournamentId());
         model.addAttribute("tournamentName", tournament.getTournamentName());
         model.addAttribute("tournamentDate", tournament.getTournamentDate());
-        model.addAttribute("duration", tournament.getDuration());
+//        model.addAttribute("duration", tournament.getDuration());
         model.addAttribute("playerCount", tournament.getPlayerCount());
         model.addAttribute("playerParticipated", tournament.getPointsTable().size());
         model.addAttribute("totalMatches", tournamentMatchList.size());
-        model.addAttribute("playedMatches", tournamentMatchList.stream().filter(match -> match.getWinner() != 0).count());
+        model.addAttribute("completedMatches", tournamentMatchList.stream().filter(match -> match.getWinner() != 0).count());
 
-        model.addAttribute("tournamentMatchList", tournamentMatchList);
+        Collection<TournamentMatch> tournamentLeagueMatchList = tournamentMatchList.stream()
+                .filter(tournamentMatch -> tournamentMatch.getRoundNo() != 1001
+                        && tournamentMatch.getRoundNo() != 1002
+                        && tournamentMatch.getRoundNo() != 2001)
+                .toList();
+        model.addAttribute("tournamentLeagueMatchList", tournamentLeagueMatchList);
+        Collection<TournamentMatch> tournamentFinalsMatchList = tournamentMatchList.stream()
+                .filter(tournamentMatch -> tournamentMatch.getRoundNo() == 1001
+                        || tournamentMatch.getRoundNo() == 1002
+                        || tournamentMatch.getRoundNo() == 2001)
+                .toList();
+        model.addAttribute("tournamentFinalsMatchList", tournamentFinalsMatchList);
         model.addAttribute("pointsTable", pointsTable);
 
         model.addAttribute("tournamentMatch", new TournamentMatch());
+        log.info("tournamentLeagueMatchList::  " + tournamentLeagueMatchList);
+        log.info("tournamentFinalsMatchList::  " + tournamentFinalsMatchList);
         return "tournament_info";
     }
 
@@ -148,9 +160,11 @@ public class TournamentController {
         tournament.setTournamentMatchList(schedule);
         tournament.setPointsTable(pointsTable);
         tournament.setTournamentDate(new Date());
+        tournament.setPlayerCount(pointsTable.size());
         tournamentService.save(tournament);
         model.addAttribute("tournamentList", tournamentService.findAll());
         //model.addAttribute("matchList", null);
+        log.info("Create Tournament Request");
         return "redirect:tournament";
     }
 

@@ -5,6 +5,7 @@ import io.h2o.ufc.model.Player;
 import io.h2o.ufc.service.FreePlayMatchService;
 import io.h2o.ufc.service.PlayerService;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 public class FreePlayMatchController {
 
@@ -59,6 +61,7 @@ public class FreePlayMatchController {
 //        System.err.println(new Date());
 //        freePlayMatch.setMatchTime(new Date());
 
+        log.info("Create FreePlay Match Request: " + freePlayMatch);
         freePlayMatchService.save(freePlayMatch);
         return "redirect:freePlay";
     }
@@ -89,6 +92,7 @@ public class FreePlayMatchController {
 
 
         System.err.println("X!:   " + x1);
+        log.info("Update Score FreePlay Match Request: " + x1);
         return "redirect:freePlay";
     }
 }

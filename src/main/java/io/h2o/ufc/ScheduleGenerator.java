@@ -38,6 +38,49 @@ public class ScheduleGenerator {
             }
         }
 
+        if (numPlayers <= 3) {
+            //only create finals
+            schedule.add(TournamentMatch.builder()
+                    .tournament(tournament)
+                    .playerOneId(2001)
+                    .playerTwoId(2002)
+                    .matchNo(matchNo++)
+                    .roundNo(2001)
+                    .build());
+        } else {
+            //create two semifinals and a final
+            schedule.add(TournamentMatch.builder()
+                    .tournament(tournament)
+                    .playerOneId(2001)
+                    .playerTwoId(2002)
+                    .matchNo(matchNo++)
+                    .roundNo(1001)
+                    .build());
+            schedule.add(TournamentMatch.builder()
+                    .tournament(tournament)
+                    .playerOneId(2001)
+                    .playerTwoId(2002)
+                    .matchNo(matchNo++)
+                    .roundNo(1002)
+                    .build());
+//            schedule.add(TournamentMatch.builder()
+//                    .tournament(tournament)
+//                    .playerOneId(2001)
+//                    .playerTwoId(2002)
+//                    .matchNo(matchNo++)
+//                    .roundNo(1003)
+//                    .build());
+            schedule.add(TournamentMatch.builder()
+                    .tournament(tournament)
+                    .playerOneId(2001)
+                    .playerTwoId(2002)
+                    .matchNo(matchNo++)
+                    .roundNo(2001)
+                    .build());
+
+        }
+
+
         return schedule;
     }
 //    public List<Match> generateSchedule(Tournament tournament, List<String> players) {

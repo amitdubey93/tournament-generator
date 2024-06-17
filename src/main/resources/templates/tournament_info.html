@@ -38,7 +38,7 @@
                             Total Matches: <span class="card-text" th:text="${totalMatches}">42</span>
                         </div>
                         <div class="col-sm-6 col-md-12">
-                            Completed Matches: <span class="card-text" th:text="${playedMatches}">13</span>
+                            Completed Matches: <span class="card-text" th:text="${completedMatches}">13</span>
                         </div>
                     </div>
                 </div>
@@ -70,9 +70,54 @@
         </div>
     </div>
 
-    <h2 th:if="${tournamentMatchList}">Match Schedule</h2>
-    <div class="row" th:if="${tournamentMatchList}">
-        <div class="col-lg-4 col-sm-6 p-2" th:each="tournamentMatch:${tournamentMatchList}">
+    <h2 th:if="${tournamentFinalsMatchList}">Final's Schedule</h2>
+    <div class="row" th:if="${tournamentFinalsMatchList}">
+        <div class="col-lg-4 col-sm-6 p-2" th:each="tournamentMatch:${tournamentFinalsMatchList}">
+            <div class="border rounded match-box">
+                <div class="mb-3 d-flex justify-content-around">
+                    <img class="img-circle" th:src="${tournamentMatch.playerOneImagePath}"/>
+                    <h3 style="padding-top: 20px;">vs</h3>
+                    <img class="img-circle" th:src="${tournamentMatch.playerTwoImagePath}"/>
+                </div>
+                <div>
+                    <h5><span th:text="${tournamentMatch.playerOneName}"/> vs <span
+                            th:text="${tournamentMatch.playerTwoName}"/></h5>
+                    <h6>
+                        Round: <span th:text="${tournamentMatch.roundNo}"/> <br>
+                        Match No: <span th:text="${tournamentMatch.matchNo}"/> <br>
+                        Winner : <span th:text="${tournamentMatch.winnerName}"/>
+                    </h6>
+                    <h5>Score : <span th:text="${tournamentMatch.playerOneScore}"/> - <span
+                            th:text="${tournamentMatch.playerTwoScore}"/></h5>
+                    <br>
+                    <button
+                            class="btn btn-primary"
+                            onclick="openModal(this)"
+                            th:data-matchid="${tournamentMatch.matchId}"
+                            th:data-matchno="${tournamentMatch.matchNo}"
+                            th:data-playeroneid="${tournamentMatch.playerOneId}"
+                            th:data-playeroneimagepath="${tournamentMatch.playerOneImagePath}"
+                            th:data-playeronescore="${tournamentMatch.playerOneScore}"
+                            th:data-playertwoid="${tournamentMatch.playerTwoId}"
+                            th:data-playertwoimagepath="${tournamentMatch.playerTwoImagePath}"
+                            th:data-playertwoscore="${tournamentMatch.playerTwoScore}"
+                            th:data-roundno="${tournamentMatch.roundNo}"
+                            th:data-tourid="${tournamentId}"
+                            th:if="${tournamentMatch.winner == 0}">Update
+                    </button>
+
+                    <div class="alert alert-secondary alert-time"
+                         th:if="${tournamentMatch.winner != 0}"
+                         th:text="${#dates.format(tournamentMatch.matchTime, 'dd-MMM-yyyy HH:mm')}">08-Jun-2024 01:11
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 th:if="${tournamentLeagueMatchList}">League Match Schedule</h2>
+    <div class="row" th:if="${tournamentLeagueMatchList}">
+        <div class="col-lg-4 col-sm-6 p-2" th:each="tournamentMatch:${tournamentLeagueMatchList}">
             <div class="border rounded match-box">
                 <div class="mb-3 d-flex justify-content-around">
                     <img class="img-circle" th:src="${tournamentMatch.playerOneImagePath}"/>

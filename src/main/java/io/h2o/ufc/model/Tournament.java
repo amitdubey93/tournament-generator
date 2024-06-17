@@ -1,8 +1,6 @@
 package io.h2o.ufc.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -24,29 +22,14 @@ public class Tournament {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tournament_sequence")
     private int tournamentId;
 
-    @NotNull
-    @Size(min=2, max=30)
-    private String tournamentName;
-
-//    @Transient
-//    private Object playerIds;
-
-    @Transient
-    private List<Player> playerList;
-
-    @NotNull
-    private String duration;
-
-    private Date tournamentDate;
-
     //    @NotNull
-//    @Min(4)
-    @Transient
+//    @Size(min=2, max=30)
+    private String tournamentName;
+    private int winner;
+    private boolean allMatchesCompleted;
+    private Date tournamentDate;
     private int playerCount;
 
-
-    @Transient
-    private boolean allMatchCompleted;
 
     @OneToMany(mappedBy="tournament",cascade=CascadeType.ALL)
     @ToString.Exclude
@@ -56,6 +39,11 @@ public class Tournament {
     @ToString.Exclude
     private Collection<PointsTable> pointsTable = new ArrayList<>();
 
+    @Transient
+    private String winnerName;
+
+    @Transient
+    private List<Player> playerList;
 
 }
 

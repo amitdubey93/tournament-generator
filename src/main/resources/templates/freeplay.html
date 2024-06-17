@@ -75,8 +75,10 @@
                             th:data-playertwoid="${freePlayMatch.playerTwoId}"
                             th:data-playertwoimagepath="${freePlayMatch.playerTwoImagePath}"
                             th:data-playertwoscore="${freePlayMatch.playerTwoScore}"
-                            th:if="${freePlayMatch.winner == 0}">Update
+                            th:if="${freePlayMatch.playerOneScore < 10 && freePlayMatch.playerTwoScore < 10}">Update
                     </button>
+                    <!--                    th:if="${freePlayMatch.winner == 0}"-->
+
                 </td>
             </tr>
             </tbody>
@@ -158,7 +160,9 @@
           updateModal.show();
       }
 
-    new DataTable('#freePlayTable');
+    new DataTable('#freePlayTable',{
+        order: [ [0, 'desc'] ]
+    });
 
     $('#freePlayUpdateForm').submit(function() {
         if ($('#playerOneScore').val() == $('#playerTwoScore').val()) {
@@ -166,40 +170,55 @@
           return false;
         } else { return true; }
     });
+    $('#freePlayForm').submit(function() {
+        if ($('#playerOneSelect').val() == $('#playerTwoSelect').val()) {
+          alert("Both Player's Can't Be Same");
+          return false;
+        } else { return true; }
+    });
 
     $(document).ready(function() {
 
-        $('#playerTwoSelect option[value="1"]').remove();
+<!--        $('#playerTwoSelect option[value="1"]').remove();-->
 
-        $('#playerOneSelect').on('change', function() {
-            $('#playerTwoSelect').html($('#playerOneSelect').html());
-            var selectedValue = $(this).val();
-            $('#playerTwoSelect option').each(function() {
-                if ($(this).val() == selectedValue) {
-                    $(this).remove();
-                }
-            });
-        });
+<!--        $('#playerOneSelect').on('change', function() {-->
+<!--            $('#playerTwoSelect').html($('#playerOneSelect').html());-->
+<!--            var selectedValue = $(this).val();-->
+<!--            $('#playerTwoSelect option').each(function() {-->
+<!--                if ($(this).val() == selectedValue) {-->
+<!--                    $(this).remove();-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
     });
 
-    <!--    function formatState (state) {-->
-    <!--          if (!state.id) {-->
-    <!--            return state.text;-->
-    <!--          }-->
-    <!--          var $state = $(-->
-    <!--            '<span><img src="' + '../images/' + state.element.text.toLowerCase() + '.jpg" class="img-flag" style="width:20px"/> ' + state.text + '</span>'-->
-    <!--          );-->
-    <!--          return $state;-->
-    <!--        };-->
+        function formatState (state) {
+          if (!state.id) {
+            return state.text;
+          }
+          var $state = $(
+            '<span><img src="' + '../images/' + state.element.text.toLowerCase() + '.jpg" class="img-flag" style="width:20px"/> ' + state.text + '</span>'
+          );
+          return $state;
+        };
+        function formatState1 (state) {
+          if (!state.id) {
+            return state.text;
+          }
+          var $state = $(
+            '<span><img src="' + '../images/' + state.element.text.toLowerCase() + '.jpg" class="img-flag" style="width:20px"/> ' + state.text + '</span>'
+          );
+          return $state;
+        };
 
-    <!--        $('#playerOneSelect').select2({-->
-    <!--          placeholder: 'Select Player One',-->
-    <!--          templateResult: formatState-->
-    <!--        });-->
-    <!--        $('#playerTwoSelect').select2({-->
-    <!--          placeholder: 'Select Player Two',-->
-    <!--          templateResult: formatState-->
-    <!--        });-->
+        $('#playerOneSelect').select2({
+          placeholder: 'Select Player One',
+          templateResult: formatState
+        });
+        $('#playerTwoSelect').select2({
+          placeholder: 'Select Player Two',
+          templateResult: formatState1
+        });
 
     <!--        $('#playerOneId').on("select2:selecting", function(e) {-->
     <!--           console.log("selected player:: "+e.params.args.data.id);-->
