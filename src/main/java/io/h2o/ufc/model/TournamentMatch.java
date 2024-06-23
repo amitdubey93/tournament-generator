@@ -48,7 +48,7 @@ public class TournamentMatch {
     private String playerTwoImagePath;
 
     @Transient
-    private int TourId;
+    private int tourId;
 
     @Transient
     private String winnerName;

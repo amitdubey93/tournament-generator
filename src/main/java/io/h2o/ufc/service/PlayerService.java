@@ -23,4 +23,11 @@ public class PlayerService {
     public int updatePlayerLossStats(int score, int playerId){
         return playerRepository.updatePlayerLossStats(score, playerId);
     }
+
+    public Player findByPlayerId(int playerId) {
+        return playerRepository.findByPlayerId(playerId);
+    }
+//    public String findPlayerNameByPlayerId(int playerId){
+//        return playerRepository.findPlayerNameByPlayerId(playerId);
+//    }
 }

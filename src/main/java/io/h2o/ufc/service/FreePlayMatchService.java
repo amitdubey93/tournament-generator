@@ -1,5 +1,6 @@
 package io.h2o.ufc.service;
 
+import io.h2o.ufc.model.DailyFreePlayMatchCount;
 import io.h2o.ufc.model.FreePlayMatch;
 import io.h2o.ufc.model.Player;
 import io.h2o.ufc.repository.FreePlayMatchRepository;
@@ -37,4 +38,8 @@ public class FreePlayMatchService {
         return freePlayMatchRepository.getPlayerData(playerId);
     }
 
+
+    public List<DailyFreePlayMatchCount> getDailyFreePlayMatchCounts() {
+        return freePlayMatchRepository.getDailyFreePlayMatchCounts();
+    }
 }

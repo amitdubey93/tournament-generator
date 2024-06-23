@@ -1,5 +1,6 @@
 package io.h2o.ufc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class PointsTable {
 
     @ManyToOne
     @JoinColumn(name="tournament_id")
+    @JsonIgnore
     private Tournament tournament;
 
     //private int tournamentId;

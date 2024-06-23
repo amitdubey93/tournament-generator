@@ -15,6 +15,22 @@ import java.util.Date;
 @Builder
 @Entity
 @Table(name = "free_play_matches")
+
+@NamedNativeQuery(
+        name = "getDailyFreePlayMatchCounts",
+        query = " SELECT count(free_play_id) as matchCount, date_format(match_time,'%Y-%m-%d') as matchDate FROM free_play_matches  where match_time not like '%2024-06-01%' GROUP BY date_format(match_time,'%Y-%m-%d') ORDER BY match_time",
+        resultSetMapping = "result"
+)
+@SqlResultSetMapping(
+        name = "result",
+        classes = @ConstructorResult(
+                targetClass = DailyFreePlayMatchCount.class,
+                columns = {
+                        @ColumnResult(name = "matchCount", type = Integer.class),
+                        @ColumnResult(name = "matchDate", type = String.class)
+                }
+        )
+)
 public class FreePlayMatch {
 
     @Id

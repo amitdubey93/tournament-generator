@@ -27,4 +27,6 @@ public class PointsTableService {
     public List<PointsTable> findAllByTournamentId(int tourId) {
         return pointsTableRepository.findAllByTournamentId(tourId);
     }
+
+
 }
