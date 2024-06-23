@@ -9,7 +9,13 @@
 
 <div th:replace="~{fragments/header :: header}">...</div>
 <div class="container my-2">
-
+    <!--    <audio controls muted id="audio">-->
+    <!--        <source th:src="@{/audio/clap.mp3}"  type="audio/mpeg">-->
+    <!--        Your browser does not support the audio element.-->
+    <!--    </audio>-->
+    <!--    <button id="firecrackerBtn" onclick="celebrate()">Click me for firecrackers!</button>-->
+    <div id="firecrackerContainer"></div>
+    <audio id="firecrackerAudio" loop th:src="@{/audio/firecrackers.mp3}"></audio>
 <!--    <div class="row p-2">-->
 <!--        <div class="col" th:text="${tournamentId}">001</div>-->
 <!--        <div class="col" th:text="${tournamentName}">UFC - 1</div>-->
@@ -18,31 +24,47 @@
 <!--    </div>-->
     <div class="row justify-content-sm-center">
         <div class="col-lg-4 col-sm-8">
-            <div class="card bg-light mb-3">
-                <div class="card-header" th:text="${tournamentName}">Tournament Name</div>
-                <div class="card-body">
-                    <h5 class="card-title">Tournament Details</h5>
-                    <!--                    <p th:text="${tournamentDate}">08-Jun-2024 01:11</p>-->
-                    <!--                    <p th:text="${#dates.format(tournamentDate, 'dd-MMM-yyyy')}">08-Jun-2024 01:11</p>-->
-                    <!--                    Players Participated: <span class="card-text" th:text="${playerParticipated}">7</span>-->
-                    <!--                    Total Matches: <span class="card-text" th:text="${totalMatches}">42</span>-->
-                    <!--                    Completed Matches: <span class="card-text" th:text="${playedMatches}">13</span>-->
-                    <div class="row">
-                        <div class="col-sm-6 col-md-12">
-                            <p th:text="${#dates.format(tournamentDate, 'dd-MMM-yyyy')}">08-Jun-2024 01:11</p>
-                        </div>
-                        <div class="col-sm-6 col-md-12">
-                            Players Participated: <span class="card-text" th:text="${playerParticipated}">7</span>
-                        </div>
-                        <div class="col-sm-6 col-md-12">
-                            Total Matches: <span class="card-text" th:text="${totalMatches}">42</span>
-                        </div>
-                        <div class="col-sm-6 col-md-12">
-                            Completed Matches: <span class="card-text" th:text="${completedMatches}">13</span>
-                        </div>
-                    </div>
+            <div class="row my-card">
+                <div class="col-sm-6 col-md-12">
+                    <h5 th:text="${tournamentName}">Tournament Name</h5>
+                    <h4 th:text="${#dates.format(tournamentDate, 'dd-MMM-yyyy')}">08-Jun-2024 01:11</h4>
+                </div>
+                <div class="col-sm-6 col-md-12">
+                    Players Participated: <span th:text="${playerParticipated}">7</span>
+                </div>
+                <div class="col-sm-6 col-md-12">
+                    Total Matches: <span th:text="${totalMatches}">42</span>
+                </div>
+                <div class="col-sm-6 col-md-12">
+                    Completed Matches: <span th:text="${completedMatches}">13</span>
                 </div>
             </div>
+            <!--            <div class="card bg-light mb-3">-->
+            <!--                <div class="card-header" th:text="${tournamentName}">Tournament Name</div>-->
+            <!--                <div class="card-body">-->
+            <!--                    <h5 class="card-title">Tournament Details</h5>-->
+            <!--                    &lt;!&ndash;                    <p th:text="${tournamentDate}">08-Jun-2024 01:11</p>&ndash;&gt;-->
+            <!--                    &lt;!&ndash;                    <p th:text="${#dates.format(tournamentDate, 'dd-MMM-yyyy')}">08-Jun-2024 01:11</p>&ndash;&gt;-->
+            <!--                    &lt;!&ndash;                    Players Participated: <span class="card-text" th:text="${playerParticipated}">7</span>&ndash;&gt;-->
+            <!--                    &lt;!&ndash;                    Total Matches: <span class="card-text" th:text="${totalMatches}">42</span>&ndash;&gt;-->
+            <!--                    &lt;!&ndash;                    Completed Matches: <span class="card-text" th:text="${playedMatches}">13</span>&ndash;&gt;-->
+            <!--                    <div class="row">-->
+            <!--                        <div class="col-sm-6 col-md-12">-->
+            <!--                            <p th:text="${#dates.format(tournamentDate, 'dd-MMM-yyyy')}">08-Jun-2024 01:11</p>-->
+            <!--                        </div>-->
+            <!--                        <div class="col-sm-6 col-md-12">-->
+            <!--                            Players Participated: <span class="card-text" th:text="${playerParticipated}">7</span>-->
+            <!--                        </div>-->
+            <!--                        <div class="col-sm-6 col-md-12">-->
+            <!--                            Total Matches: <span class="card-text" th:text="${totalMatches}">42</span>-->
+            <!--                        </div>-->
+            <!--                        <div class="col-sm-6 col-md-12">-->
+            <!--                            Completed Matches: <span class="card-text" th:text="${completedMatches}">13</span>-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
+
         </div>
         <div class="col-lg-8 col-sm-12">
             <h2 th:if="${pointsTable}">Points Table</h2>
@@ -80,15 +102,24 @@
                     <img class="img-circle" th:src="${tournamentMatch.playerTwoImagePath}"/>
                 </div>
                 <div>
-                    <h5><span th:text="${tournamentMatch.playerOneName}"/> vs <span
-                            th:text="${tournamentMatch.playerTwoName}"/></h5>
+                    <h5><span th:text="${tournamentMatch.playerOneName}"/> vs
+                        <span th:text="${tournamentMatch.playerTwoName}"/></h5>
                     <h6>
                         Round: <span th:text="${tournamentMatch.roundNo}"/> <br>
-                        Match No: <span th:text="${tournamentMatch.matchNo}"/> <br>
-                        Winner : <span th:text="${tournamentMatch.winnerName}"/>
+                        Match No: <span th:text="${tournamentMatch.matchNo}"/> of <span th:text="${totalMatches}"/><br>
+                        Winner :
+                        <span id="winName" th:if="${tournamentMatch.roundNo == 2001}"
+                              th:text="${tournamentMatch.winnerName}"/>
+                        <span th:if="${tournamentMatch.roundNo != 2001}" th:text="${tournamentMatch.winnerName}"/>
+
                     </h6>
-                    <h5>Score : <span th:text="${tournamentMatch.playerOneScore}"/> - <span
-                            th:text="${tournamentMatch.playerTwoScore}"/></h5>
+                    <h5 th:if="${tournamentMatch.roundNo == 2001}">Score :
+                        <span id="p1s" th:text="${tournamentMatch.playerOneScore}"/> -
+                        <span id="p2s" th:text="${tournamentMatch.playerTwoScore}"/></h5>
+                    <br>
+                    <h5 th:if="${tournamentMatch.roundNo != 2001}">Score :
+                        <span th:text="${tournamentMatch.playerOneScore}"/> -
+                        <span th:text="${tournamentMatch.playerTwoScore}"/></h5>
                     <br>
                     <button
                             class="btn btn-primary"
@@ -125,15 +156,19 @@
                     <img class="img-circle" th:src="${tournamentMatch.playerTwoImagePath}"/>
                 </div>
                 <div>
-                    <h5><span th:text="${tournamentMatch.playerOneName}"/> vs <span
-                            th:text="${tournamentMatch.playerTwoName}"/></h5>
+                    <h5>
+                        <span th:text="${tournamentMatch.playerOneName}"/> vs
+                        <span th:text="${tournamentMatch.playerTwoName}"/>
+                    </h5>
                     <h6>
                         Round: <span th:text="${tournamentMatch.roundNo}"/> <br>
-                        Match No: <span th:text="${tournamentMatch.matchNo}"/> <br>
+                        Match No: <span th:text="${tournamentMatch.matchNo}"/> of <span th:text="${totalMatches}"/><br>
                         Winner : <span th:text="${tournamentMatch.winnerName}"/>
                     </h6>
-                    <h5>Score : <span th:text="${tournamentMatch.playerOneScore}"/> - <span
-                            th:text="${tournamentMatch.playerTwoScore}"/></h5>
+                    <h5>Score :
+                        <span th:text="${tournamentMatch.playerOneScore}"/> -
+                        <span th:text="${tournamentMatch.playerTwoScore}"/>
+                    </h5>
                     <br>
                     <button
                             th:data-matchid="${tournamentMatch.matchId}"
@@ -171,7 +206,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title mr-3" id="updateModalLabel">Match No: </h5>
                     <h5 id="matchNo1">23</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <button aria-label="Close" class="close" data-dismiss="modal" id="closeBtn" type="button"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" th:field="*{matchId}" id="matchId">
@@ -202,12 +237,55 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Update Score</button>
+                    <button class="btn btn-primary" id="modalSubmit" type="submit">Update Score</button>
+                    <button class="btn btn-primary" id="updateFinalScore" type="button">Update Final Score</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+<!--<div class="modal fade" id="updateModal2" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-dialog-centered">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title mr-3" id="updateModalLabel2">Match No: </h5>-->
+<!--                <h5 id="matchNo3">23</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <input type="text" id="matchId2">-->
+<!--                <input type="text" id="tourId2">-->
+<!--                <input type="text" id="matchNo2">-->
+<!--                <input type="text" id="roundNo2">-->
+<!--                <input type="text" id="playerOneId2">-->
+<!--                <input type="text" id="playerTwoId2">-->
+
+
+<!--                <div class="mb-3 d-flex justify-content-around">-->
+<!--                    <img class="img-circle" id="playerOneImagePath2" th:src="${tournamentMatch.playerOneImagePath}"/>-->
+<!--                    <h3 style="padding-top: 20px;">vs</h3>-->
+<!--                    <img class="img-circle" id="playerTwoImagePath2" th:src="${tournamentMatch.playerTwoImagePath}"/>-->
+<!--                </div>-->
+<!--                <div class="mb-3 row">-->
+<!--                    <div class="col-6">-->
+<!--                        <label for="playerOneScore" class="form-label">Player One Score</label>-->
+<!--                        <input class="form-control" id="playerOneScore2" type="number"-->
+<!--                               value="10">-->
+<!--                    </div>-->
+<!--                    <div class="col-6">-->
+<!--                        <label for="playerTwoScore" class="form-label">Player Two Score</label>-->
+<!--                        <input class="form-control" id="playerTwoScore2"  type="number"-->
+<!--                               value="10">-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+<!--                <button type="button" id="updateFinal" class="btn btn-primary">Update Score</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
 
 <script>
@@ -239,8 +317,23 @@
 
       //console.log(playerOneId);
       const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
+
+      if(roundNo==2001){
+        $('#modalSubmit').hide();
+        $('#updateFinalScore').show();
+      }
+      else{
+        $('#modalSubmit').show();
+        $('#updateFinalScore').hide();
+      }
       updateModal.show();
     }
+    var pointsTable = new DataTable('#pointsTable',{
+        info: false,
+        paging: false,
+        searching: false,
+        order: [ [4 , 'desc'] ]
+    });
 
     $('#tournamentMatchUpdateForm').submit(function() {
         if ($('#playerOneScore').val() == $('#playerTwoScore').val()) {
@@ -249,13 +342,98 @@
         } else { return true; }
     });
 
-    new DataTable('#pointsTable',{
-        info: false,
-        paging: false,
-        searching: false,
-        order: [ [4 , 'desc'] ]
-    });
-</script>
+    $("#updateFinalScore").click(function () {
+        const roundNo = document.getElementById("roundNo").value;
+        if ($("#playerOneScore").val() == $("#playerTwoScore").val()) {
+          alert("Player's Score Can't Be Same");
+          return false;
+        }
 
+        //alert("roundNo:: " + roundNo);
+        var data = {
+          matchId: document.getElementById("matchId").value,
+          tourId: document.getElementById("tourId").value,
+          roundNo: roundNo,
+          matchNo: document.getElementById("matchNo").value,
+          playerOneId: document.getElementById("playerOneId").value,
+          playerTwoId: document.getElementById("playerTwoId").value,
+          playerOneScore: document.getElementById("playerOneScore").value,
+          playerTwoScore: document.getElementById("playerTwoScore").value,
+        };
+
+        var jsonString = JSON.stringify(data);
+        console.log(data);
+        $.ajax({
+          url: "http://localhost:8080/tournament/finalMatch",
+          type: "PUT",
+          data: jsonString,
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (response) {
+            celebrate(response.winnerName);
+            //playAudio();
+            $('#closeBtn').click();
+            $('.btn').hide();
+            $('#p1s').html(response.playerOneScore);
+            $('#p2s').html(response.playerTwoScore);
+            $('#winName').html(response.winnerName);
+            //alert(response.matchId);
+            console.log(response);
+            getPointsTable(response.tourId);
+          },
+          error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+            alert(xhr.responseText);
+          },
+        });
+
+    });
+
+    function getPointsTable(tourId){
+        $.ajax({
+          url: "http://localhost:8080/tournament/pointsTable/"+tourId,
+          type: "GET",
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (response) {
+
+            //alert(response.matchId);
+            console.log("success from get points table");
+            console.log(response);
+            pointsTable.destroy();
+            $('#pointsTable tbody').html("");
+            var htmlData = "";
+            for (var i = 0; i < response.length; i++) {
+                htmlData += "<tr>";
+                htmlData += "<td>"+response[i].playerName+"</td>";
+                htmlData += "<td>"+response[i].matchPlayed+"</td>";
+                htmlData += "<td>"+response[i].won+"</td>";
+                htmlData += "<td>"+response[i].lost+"</td>";
+                htmlData += "<td>"+response[i].score+"</td>";
+                htmlData += "</>tr>";
+            }
+
+            $('#pointsTable tbody').html(htmlData);
+            new DataTable('#pointsTable',{
+                info: false,
+                paging: false,
+                searching: false,
+                order: [ [4 , 'desc'] ]
+            });
+
+
+          },
+          error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+            alert(xhr.responseText);
+          },
+        });
+    }
+<!--    function playAudio() {-->
+<!--        var audio = document.getElementById("audio");-->
+<!--        if(audio) audio.play();-->
+<!--        console.log( "audio playing!" );-->
+<!--    }-->
+</script>
 </body>
 </html>

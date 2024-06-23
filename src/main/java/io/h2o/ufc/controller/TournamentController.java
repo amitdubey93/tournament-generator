@@ -124,8 +124,9 @@ public class TournamentController {
         model.addAttribute("pointsTable", pointsTable);
 
         model.addAttribute("tournamentMatch", new TournamentMatch());
-        log.info("tournamentLeagueMatchList::  " + tournamentLeagueMatchList);
-        log.info("tournamentFinalsMatchList::  " + tournamentFinalsMatchList);
+        model.addAttribute("tournamentMatch", new TournamentMatch());
+//        log.info("tournamentLeagueMatchList::  " + tournamentLeagueMatchList);
+//        log.info("tournamentFinalsMatchList::  " + tournamentFinalsMatchList);
         return "tournament_info";
     }
 

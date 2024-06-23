@@ -1,5 +1,6 @@
 package io.h2o.ufc.repository;
 
+import io.h2o.ufc.model.DailyFreePlayMatchCount;
 import io.h2o.ufc.model.FreePlayMatch;
 import io.h2o.ufc.model.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface FreePlayMatchRepository extends JpaRepository<FreePlayMatch, Integer> {
@@ -32,4 +34,7 @@ public interface FreePlayMatchRepository extends JpaRepository<FreePlayMatch, In
             "from FreePlayMatch m where (m.playerOneId = :playerId or m.playerTwoId = :playerId) and m.winner != 0")
     public Player getPlayerData(int playerId);
 
+    //    @Query("select new io.h2o.ufc.model.DailyFreePlayMatchCount( count(freePlayId), date_format(matchTime,'%Y-%m-%d')) from FreePlatMatch group by date_format(matchTime,'%Y-%m-%d') order by matchTime")
+    @Query(name = "getDailyFreePlayMatchCounts", nativeQuery = true)
+    public List<DailyFreePlayMatchCount> getDailyFreePlayMatchCounts();
 }

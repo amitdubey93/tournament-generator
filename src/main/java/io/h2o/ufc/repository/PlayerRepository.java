@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Integer> {
 
@@ -25,4 +23,9 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
     @Modifying
     @Query("UPDATE Player SET matchPlayed = matchPlayed + 1, score = score + :score WHERE playerId= :playerId")
     public int updatePlayerLossStats(int score, int playerId);
+
+
+    public Player findByPlayerId(int id);
+//    public String findPlayerNameByPlayerId(int id);
+
 }

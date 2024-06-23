@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>io.h2o</groupId>
 	<artifactId>ufc</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>ufc</name>
 	<description>ufc dashboard</description>
 	<properties>
@@ -64,7 +64,7 @@
 
 
 	<build>
-		<finalName>ufc-0.0.2</finalName>
+		<finalName>ufc-3.0.0</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
