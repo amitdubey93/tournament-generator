@@ -64,7 +64,7 @@ public class TournamentController {
 
         model.addAttribute("tournamentList", tournamentList);
         //model.addAttribute("matchList", null);
-        model.addAttribute("playerList", playerService.findAll());
+        model.addAttribute("playerList", playerService.getPlayerList());
         return "tournament";
     }
 
@@ -109,21 +109,26 @@ public class TournamentController {
         model.addAttribute("totalMatches", tournamentMatchList.size());
         model.addAttribute("completedMatches", tournamentMatchList.stream().filter(match -> match.getWinner() != 0).count());
 
+//        Collection<TournamentMatch> tournamentLeagueMatchList = tournamentMatchList.stream()
+//                .filter(tournamentMatch -> tournamentMatch.getRoundNo() != 1001
+//                        && tournamentMatch.getRoundNo() != 1002
+//                        && tournamentMatch.getRoundNo() != 2001)
+//                .toList();
         Collection<TournamentMatch> tournamentLeagueMatchList = tournamentMatchList.stream()
-                .filter(tournamentMatch -> tournamentMatch.getRoundNo() != 1001
-                        && tournamentMatch.getRoundNo() != 1002
-                        && tournamentMatch.getRoundNo() != 2001)
-                .toList();
+                .filter(tournamentMatch -> tournamentMatch.getRoundNo() < 1000).toList();
         model.addAttribute("tournamentLeagueMatchList", tournamentLeagueMatchList);
+
+//        Collection<TournamentMatch> tournamentFinalsMatchList = tournamentMatchList.stream()
+//                .filter(tournamentMatch -> tournamentMatch.getRoundNo() == 1001
+//                        || tournamentMatch.getRoundNo() == 1002
+//                        || tournamentMatch.getRoundNo() == 2001)
+//                .toList();
         Collection<TournamentMatch> tournamentFinalsMatchList = tournamentMatchList.stream()
-                .filter(tournamentMatch -> tournamentMatch.getRoundNo() == 1001
-                        || tournamentMatch.getRoundNo() == 1002
-                        || tournamentMatch.getRoundNo() == 2001)
-                .toList();
+                .filter(tournamentMatch -> tournamentMatch.getRoundNo() > 1000).toList();
         model.addAttribute("tournamentFinalsMatchList", tournamentFinalsMatchList);
+
         model.addAttribute("pointsTable", pointsTable);
 
-        model.addAttribute("tournamentMatch", new TournamentMatch());
         model.addAttribute("tournamentMatch", new TournamentMatch());
 //        log.info("tournamentLeagueMatchList::  " + tournamentLeagueMatchList);
 //        log.info("tournamentFinalsMatchList::  " + tournamentFinalsMatchList);

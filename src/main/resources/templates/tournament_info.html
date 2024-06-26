@@ -9,6 +9,8 @@
 
 <div th:replace="~{fragments/header :: header}">...</div>
 <div class="container my-2">
+    <!--    <input type="hidden"  id="url">-->
+    <input id="url" th:value="${url}" type="hidden">
     <!--    <audio controls muted id="audio">-->
     <!--        <source th:src="@{/audio/clap.mp3}"  type="audio/mpeg">-->
     <!--        Your browser does not support the audio element.-->
@@ -364,7 +366,7 @@
         var jsonString = JSON.stringify(data);
         console.log(data);
         $.ajax({
-          url: "http://localhost:8080/tournament/finalMatch",
+          url: $('#url').val()+"/tournament/finalMatch",
           type: "PUT",
           data: jsonString,
           contentType: "application/json; charset=utf-8",
@@ -391,7 +393,7 @@
 
     function getPointsTable(tourId){
         $.ajax({
-          url: "http://localhost:8080/tournament/pointsTable/"+tourId,
+          url: $('#url').val()+"/tournament/pointsTable/"+tourId,
           type: "GET",
           contentType: "application/json; charset=utf-8",
           dataType: "json",
@@ -425,7 +427,7 @@
           },
           error: function (xhr, status, error) {
             console.log(xhr.responseText);
-            alert(xhr.responseText);
+            alert("Something went wrong. Please Try Again!!!");
           },
         });
     }

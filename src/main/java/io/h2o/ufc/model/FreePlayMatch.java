@@ -51,6 +51,7 @@ public class FreePlayMatch {
     private int playerOneScore;
     private int playerTwoScore;
     private int winner;
+    private int gameType;
 
     private Date matchTime;
 

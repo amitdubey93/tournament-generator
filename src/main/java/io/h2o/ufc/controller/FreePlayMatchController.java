@@ -1,5 +1,6 @@
 package io.h2o.ufc.controller;
 
+import io.h2o.ufc.Utility;
 import io.h2o.ufc.model.FreePlayMatch;
 import io.h2o.ufc.model.Player;
 import io.h2o.ufc.service.FreePlayMatchService;
@@ -50,7 +51,8 @@ public class FreePlayMatchController {
 //        model.addAttribute("freePlayList", freePlayMatchService.findAll());
 //        model.addAttribute("freePlayList", freePlayMatchService.findAllOrderByFreePlayId());
         model.addAttribute("freePlayList", freePlayList);
-        model.addAttribute("playerList", playerService.findAll());
+        model.addAttribute("playerList", playerService.getPlayerList());
+        model.addAttribute("gameTypeMap", Utility.getGameType());
         return "freeplay";
     }
 

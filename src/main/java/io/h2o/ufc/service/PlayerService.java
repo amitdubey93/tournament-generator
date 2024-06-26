@@ -15,6 +15,11 @@ public class PlayerService {
         return playerRepository.findAll();
     }
 
+    public List<Player> getPlayerList() {
+        return playerRepository.findAll().stream().filter(player -> player.getPlayerId() < 2000).toList();
+    }
+
+
 
     public int updatePlayerWinStats(int score, int playerId){
         return playerRepository.updatePlayerWinStats(score, playerId);
