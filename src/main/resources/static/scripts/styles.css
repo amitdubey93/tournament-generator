@@ -2,6 +2,15 @@
   width:70px;
   border-radius:50%
 }
+.img-circle1{
+  width:143px;
+  border-radius:13%
+}
+#player-info{
+    font-weight: bold;
+    padding: 20px;
+    margin-bottom: 10px;
+}
 .match-box{
   padding: 2rem !important;
   margin: .5rem !important;

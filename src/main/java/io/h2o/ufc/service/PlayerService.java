@@ -19,19 +19,22 @@ public class PlayerService {
         return playerRepository.findAll().stream().filter(player -> player.getPlayerId() < 2000).toList();
     }
 
+//    public int updatePlayerWinStats(int score, int playerId){
+//        return playerRepository.updatePlayerWinStats(score, playerId);
+//    }
 
-
-    public int updatePlayerWinStats(int score, int playerId){
-        return playerRepository.updatePlayerWinStats(score, playerId);
-    }
-
-    public int updatePlayerLossStats(int score, int playerId){
-        return playerRepository.updatePlayerLossStats(score, playerId);
-    }
+//    public int updatePlayerLossStats(int score, int playerId){
+//        return playerRepository.updatePlayerLossStats(score, playerId);
+//    }
 
     public Player findByPlayerId(int playerId) {
         return playerRepository.findByPlayerId(playerId);
     }
+
+    public Player save(Player player) {
+        return playerRepository.save(player);
+    }
+
 //    public String findPlayerNameByPlayerId(int playerId){
 //        return playerRepository.findPlayerNameByPlayerId(playerId);
 //    }

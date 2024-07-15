@@ -2,7 +2,7 @@ package io.h2o.ufc.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.h2o.ufc.model.DailyFreePlayMatchCount;
+import io.h2o.ufc.dto.DailyFreePlayMatchCount;
 import io.h2o.ufc.service.FreePlayMatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

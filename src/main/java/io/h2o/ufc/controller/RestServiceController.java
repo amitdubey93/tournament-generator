@@ -66,9 +66,9 @@ public class RestServiceController {
         int x1 = tournamentMatchService.updateTournamentMatchScore(playerOneScore, playerTwoScore, winnerId, (int) matchId);
         int x2 = pointsTableService.updatePointsTablePlayerWinStats(winnerScore, winnerId, tourId);
         int x3 = pointsTableService.updatePointsTablePlayerLossStats(loserScore, loserId, tourId);
-        int x4 = playerService.updatePlayerWinStats(winnerScore, winnerId);
-        int x5 = playerService.updatePlayerLossStats(loserScore, loserId);
-        System.err.println("X!:   " + x1 + x2 + x3 + x4 + x5);
+//        int x4 = playerService.updatePlayerWinStats(winnerScore, winnerId);
+//        int x5 = playerService.updatePlayerLossStats(loserScore, loserId);
+//        System.err.println("X!:   " + x1 + x2 + x3 + x4 + x5);
 
         boolean leagueMatchesCompletedFlag = tournamentMatchService.checkIfAllLeagueMatchesCompleted(tourId);
         List<PointsTable> pointsTable = pointsTableService.findAllByTournamentId(tourId);

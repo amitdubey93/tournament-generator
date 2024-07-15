@@ -2,101 +2,68 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="ISO-8859-1">
-    <title>Player Info</title>
+    <title>Tournament Generator</title>
+
 </head>
 <body>
+<!--<div th:replace="fragments/head_script :: head_script">...</div>-->
 <div th:replace="~{fragments/header :: header}">...</div>
-<div class="container my-2">
+<div class="container my-5">
 
-    <div class="row">
-        <div class="col-lg-6 col-sm-12 mb-5">
-            <h3>Tournament Stats</h3>
-            <table class="table table-striped table-responsive-md" id="playerTournamentTable">
-                <thead>
-                <tr>
-                    <!--                    <th>Id</th>-->
-                    <th>Name</th>
-                    <!--            <th>Nickname</th>-->
-                    <!--            <th>Image</th>-->
-                    <th>Match Played</th>
-                    <th>Score</th>
-                    <th>Total Wins</th>
-                    <th>Avg Score</th>
-                    <th>Win %</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="player:${playerTournamentList}">
-                    <!--                    <td th:text="${player.playerId}"></td>-->
-                    <td th:text="${player.playerName}"></td>
-                    <!--            <td th:text="${player.player_nickname}"></td>-->
-                    <!--            <td><img class="img-circle"  th:src="${player.image_path}"/></td>-->
-                    <td th:text="${player.matchPlayed}"></td>
-                    <td th:text="${player.score}"></td>
-                    <td th:text="${player.totalWins}"></td>
-                    <!--                    <td th:text="${player.avgScore}"></td>-->
-                    <td th:text="${#numbers.formatDecimal(player.avgScore, 0, 2)}"></td>
-                    <td th:text="${player.winPercent}"></td>
+    <form action="#" enctype="multipart/form-data" id="playerForm" method="post" style="margin-bottom:20px"
+          th:action="@{/player}"
+          th:object="${player}">
 
-                    <!--            <td><img src="../static/images/amit.jpg" width="200" th:src="@{images/amit.jpg}"/></td>-->
+        <h3>Add New Player</h3>
+        <!--        <p>Id: <input type="text" th:field="*{tournamentId}" /></p>-->
+        <div class="row">
+            <div class="form-group col-lg-4 col-sm-6">
+                <p>Name: <input class="form-control" th:field="*{playerName}" type="text"/></p>
+                <p th:errors="*{playerName}" th:if="${#fields.hasErrors('playerName')}">Name Error</p>
+            </div>
+            <div class="form-group col-lg-4 col-sm-6">
+                <p>Nick Name: <input class="form-control" th:field="*{playerNickName}" type="text"/></p>
+                <p th:errors="*{playerNickName}" th:if="${#fields.hasErrors('playerNickName')}">Name Error</p>
+            </div>
+            <div class="form-group col-lg-4 col-sm-6">
+                <p>Player Name: <input class="form-control-file" th:field="*{playerImage}" type="file"/></p>
+                <p th:errors="*{playerImage}" th:if="${#fields.hasErrors('playerImage')}">Image Error</p>
+            </div>
 
-                </tr>
-                </tbody>
-            </table>
         </div>
-        <div class="col-lg-6 col-sm-12">
-            <h3>FreePlay Stats</h3>
-            <table class="table table-striped table-responsive-md" id="playerFreePlayTable">
-                <thead>
-                <tr>
-                    <!--                    <th>Id</th>-->
-                    <th>Name</th>
-                    <!--            <th>Nickname</th>-->
-                    <!--            <th>Image</th>-->
-                    <th>Match Played</th>
-                    <th>Score</th>
-                    <th>Total Wins</th>
-                    <th>Avg Score</th>
-                    <th>Win %</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="player:${playerFreePlayList}">
-                    <!--                    <td th:text="${player.playerId}"></td>-->
-                    <td th:text="${player.playerName}"></td>
-                    <!--            <td th:text="${player.player_nickname}"></td>-->
-                    <!--            <td><img class="img-circle"  th:src="${player.image_path}"/></td>-->
-                    <td th:text="${player.matchPlayed}"></td>
-                    <td th:text="${player.score}"></td>
-                    <td th:text="${player.totalWins}"></td>
-                    <!--                    <td th:text="${player.avgScore}"></td>-->
-                    <td th:text="${#numbers.formatDecimal(player.avgScore, 0, 2)}"></td>
-                    <td th:text="${player.winPercent}"></td>
+        <p>
+            <input class="btn btn-primary" type="submit" value="Submit"/>
+            <input class="btn btn-secondary" type="reset" value="Reset"/>
+        </p>
+    </form>
 
-                    <!--            <td><img src="../static/images/amit.jpg" width="200" th:src="@{images/amit.jpg}"/></td>-->
 
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <h3 th:if="${playerList}">Tournaments</h3>
+    <table class="table table-striped table-responsive-md" id="playerTable" style="width:98%"
+           th:if="${playerList}">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Nick Name</th>
+            <th>Image</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="player:${playerList}">
+            <td th:text="${player.playerId}"></td>
+            <td>
+                <a class="btn btn-link" th:href="@{/player/{id}(id=${player.playerId})}"
+                   th:text="${player.playerName}"></a>
+            </td>
+            <!--            <td th:text="${player.playerName}"></td>-->
+            <td th:text="${player.playerNickName}"></td>
+            <td><img class="img-circle" th:src="${player.imagePath}"/></td>
+        </tr>
+        </tbody>
+    </table>
 
 </div>
-<script>
 
-    new DataTable('#playerTournamentTable',{
-        info: false,
-        paging: false,
-        searching: false,
-        order: [ [5, 'desc'] ]
-    });
-    new DataTable('#playerFreePlayTable',{
-        info: false,
-        paging: false,
-        searching: false,
-        order: [ [3, 'desc'] ]
-    });
-
-</script>
 </body>
 </html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Tournament Generator</title>
+
+</head>
+<body>
+<!--<div th:replace="fragments/head_script :: head_script">...</div>-->
+<div th:replace="~{fragments/header :: header}">...</div>
+<div class="container my-5">
+
+    <h3>Player Info</h3>
+    <div class="row" id="player-info">
+        <!--        <div class="col-3"><img class="img-circle1" th:src="${playerStat.imagePath}"/></div>-->
+        <!--        <div class="col-9">-->
+        <!--            <div>Name: <span th:text="${playerStat.playerName}"></span></div>-->
+        <!--            <div>Match Played: <span th:text="${playerStat.matchPlayed}"></span></div>-->
+        <!--            <div>Score: <span th:text="${playerStat.score}"></span></div>-->
+        <!--            <div>Total Wins: <span th:text="${playerStat.totalWins}"></span></div>-->
+        <!--            <div>Win %: <span th:text="${playerStat.winPercent}"></span></div>-->
+        <!--            <div>Avg. Score: <span th:text="${playerStat.avgScore}"></span></div>-->
+        <!--        </div>-->
+        <table class="table table-striped table-responsive" id="table-player-info">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Match Played</th>
+                <th>Score</th>
+                <th>Opp. Score</th>
+                <th>Wins</th>
+                <th>Win %</th>
+                <th>Avg. Score</th>
+                <th>Opp Avg. Score</th>
+                <th>Score Margin %</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${playerStat.playerName}"></td>
+                <td th:text="${playerStat.matchPlayed}"></td>
+                <td th:text="${playerStat.score}"></td>
+                <td th:text="${playerStat.oppScore}"></td>
+                <td th:text="${playerStat.totalWins}"></td>
+                <td th:text="${playerStat.winPercent}"></td>
+                <td th:text="${playerStat.avgScore}"></td>
+                <td th:text="${playerStat.oppAvgScore}"></td>
+                <td th:text="${playerStat.scoreMargin}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="accordion" id="accordionExample">
+        <div class="card" th:each="pvpStat:${playerVsPlayerStatList}">
+            <div class="card-header" th:id="${pvpStat.playerTwo.playerId}">
+                <h5 class="mb-0">
+                    <button aria-expanded="true" class="btn btn-link" data-toggle="collapse"
+                            th:aria-controls="${pvpStat.playerTwo.playerName}" th:data-target="'#'+${pvpStat.playerTwo.playerName}"
+                            type="button">
+                        <span th:text="${pvpStat.playerOne.playerName}"></span>
+                        <b>vs</b>
+                        <span th:text="${pvpStat.playerTwo.playerName}"></span>
+                        <span th:text="${' - '+pvpStat.playerOne.matchPlayed+' Matches Played'}"></span>
+                    </button>
+                </h5>
+            </div>
+
+            <div class="collapse" data-parent="#accordionExample"
+                 th:aria-labelledby="${pvpStat.playerTwo.playerId}" th:id="${pvpStat.playerTwo.playerName}">
+                <div class="card-body">
+                    <div>
+                        <table class="table table-striped table-responsive" style="text-align:center">
+                            <tbody>
+                            <tr>
+                                <td rowspan="4"><img class="img-circle1" th:src="${pvpStat.playerOne.imagePath}"/></td>
+                                <td th:text="${pvpStat.playerOne.score}"></td>
+                                <td><b>Score</b></td>
+                                <td th:text="${pvpStat.playerTwo.score}"></td>
+                                <td rowspan="4"><img class="img-circle1" th:src="${pvpStat.playerTwo.imagePath}"/></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${pvpStat.playerOne.totalWins}"></td>
+                                <td><b>Wins</b></td>
+                                <td th:text="${pvpStat.playerTwo.totalWins}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${pvpStat.playerOne.winPercent}"></td>
+                                <td><b>Win %</b></td>
+                                <td th:text="${pvpStat.playerTwo.winPercent}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${pvpStat.playerOne.avgScore}"></td>
+                                <td><b>Avg. Score</b></td>
+                                <td th:text="${pvpStat.playerTwo.avgScore}"></td>
+                            </tr>
+                            <tr>
+                                <td th:text="${pvpStat.playerOne.playerName}"></td>
+                                <td colspan="3"><b>VS</b></td>
+                                <td><a class="btn btn-link" th:href="@{/player/{id}(id=${pvpStat.playerTwo.playerId})}"
+                                       th:text="${pvpStat.playerTwo.playerName}"></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">Winning Player: <b><span th:text="${pvpStat.winningPlayerName}"></span></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">Winning Score Margin in %: <b><span
+                                        th:text="${pvpStat.scoreMargin}+' %'"></span></b></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <!--                        <table class="table table-striped table-responsive">-->
+                        <!--                            <thead>-->
+                        <!--                            <tr>-->
+                        <!--                                <th>Name</th>-->
+                        <!--                                <th>Match Played</th>-->
+                        <!--                                <th>Score</th>-->
+                        <!--                                <th>Wins</th>-->
+                        <!--                                <th>Win %</th>-->
+                        <!--                                <th>Avg. Score</th>-->
+                        <!--                            </tr>-->
+                        <!--                            </thead>-->
+                        <!--                            <tbody>-->
+                        <!--                            <tr>-->
+                        <!--                                <td th:text="${pvpStat.playerOne.playerName}"></td>-->
+                        <!--                                <td th:text="${pvpStat.playerOne.matchPlayed}"></td>-->
+                        <!--                                <td th:text="${pvpStat.playerOne.score}"></td>-->
+                        <!--                                <td th:text="${pvpStat.playerOne.totalWins}"></td>-->
+                        <!--                                <td th:text="${pvpStat.playerOne.winPercent}"></td>-->
+                        <!--                                <td th:text="${pvpStat.playerOne.avgScore}"></td>-->
+                        <!--                            </tr>-->
+                        <!--                            <tr>-->
+                        <!--                                <td th:text="${pvpStat.playerTwo.playerName}"></td>-->
+                        <!--                                <td th:text="${pvpStat.playerTwo.matchPlayed}"></td>-->
+                        <!--                                <td th:text="${pvpStat.playerTwo.score}"></td>-->
+                        <!--                                <td th:text="${pvpStat.playerTwo.totalWins}"></td>-->
+                        <!--                                <td th:text="${pvpStat.playerTwo.winPercent}"></td>-->
+                        <!--                                <td th:text="${pvpStat.playerTwo.avgScore}"></td>-->
+                        <!--                            </tr>-->
+                        <!--                            </tbody>-->
+                        <!--                        </table>-->
+                    </div>
+                    <div>
+                        <table class="table-pvp-fpml table table-striped table-responsive">
+                            <thead>
+                            <tr>
+                                <th>Match Id</th>
+                                <th>Player One</th>
+                                <th>Player Two</th>
+                                <th>Player One Score</th>
+                                <th>Player Two Score</th>
+                                <th>Winner</th>
+                                <th>Match Time</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="match:${pvpStat.freePlayMatchList}">
+                                <td th:text="${match.freePlayId}"></td>
+                                <td th:text="${match.playerOneName}"></td>
+                                <td th:text="${match.playerTwoName}"></td>
+                                <td th:text="${match.playerOneScore}"></td>
+                                <td th:text="${match.playerTwoScore}"></td>
+                                <td th:text="${match.winnerName}"></td>
+                                <!--                                <td th:text="${match.matchTime}"></td>-->
+                                <td th:text="${#dates.format(match.matchTime, 'dd-MMM-yyyy HH:mm')}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--    <div class="row" th:if="${playerVsPlayerStatList}">-->
+    <!--        <div class="col-12 p-2" th:each="pvpStat:${playerVsPlayerStatList}">-->
+    <!--            <div id="pvp1">-->
+    <!--                <table class="table table-striped table-responsive">-->
+    <!--                    <thead>-->
+    <!--                        <tr>-->
+    <!--                            <th>Name</th>-->
+    <!--                            <th>Match Played</th>-->
+    <!--                            <th>Score</th>-->
+    <!--                            <th>Wins</th>-->
+    <!--                            <th>Win %</th>-->
+    <!--                            <th>Avg. Score</th>-->
+    <!--                        </tr>-->
+    <!--                    </thead>-->
+    <!--                    <tbody>-->
+    <!--                        <tr>-->
+    <!--                            <td th:text="${pvpStat.playerOne.playerName}"></td>-->
+    <!--                            <td th:text="${pvpStat.playerOne.matchPlayed}"></td>-->
+    <!--                            <td th:text="${pvpStat.playerOne.score}"></td>-->
+    <!--                            <td th:text="${pvpStat.playerOne.totalWins}"></td>-->
+    <!--                            <td th:text="${pvpStat.playerOne.winPercent}"></td>-->
+    <!--                            <td th:text="${pvpStat.playerOne.avgScore}"></td>-->
+    <!--                        </tr>-->
+    <!--                        <tr>-->
+    <!--                            <td th:text="${pvpStat.playerTwo.playerName}"></td>-->
+    <!--                            <td th:text="${pvpStat.playerTwo.matchPlayed}"></td>-->
+    <!--                            <td th:text="${pvpStat.playerTwo.score}"></td>-->
+    <!--                            <td th:text="${pvpStat.playerTwo.totalWins}"></td>-->
+    <!--                            <td th:text="${pvpStat.playerTwo.winPercent}"></td>-->
+    <!--                            <td th:text="${pvpStat.playerTwo.avgScore}"></td>-->
+    <!--                        </tr>-->
+    <!--                    </tbody>-->
+    <!--                </table>-->
+    <!--            </div>-->
+    <!--            <div id="pvp-fpml1">-->
+    <!--                <table class="table-pvp-fpml table table-striped table-responsive">-->
+    <!--                    <thead>-->
+    <!--                    <tr>-->
+    <!--                        <th>Match Id</th>-->
+    <!--                        <th>Player One</th>-->
+    <!--                        <th>Player Two</th>-->
+    <!--                        <th>Player One Score</th>-->
+    <!--                        <th>Player Two Score</th>-->
+    <!--                        <th>Winner</th>-->
+    <!--                    </tr>-->
+    <!--                    </thead>-->
+    <!--                    <tbody>-->
+    <!--                    <tr th:each="match:${pvpStat.freePlayMatchList}">-->
+    <!--                        <td th:text="${match.freePlayId}"></td>-->
+    <!--                        <td th:text="${match.playerOneName}"></td>-->
+    <!--                        <td th:text="${match.playerTwoName}"></td>-->
+    <!--                        <td th:text="${match.playerOneScore}"></td>-->
+    <!--                        <td th:text="${match.playerTwoScore}"></td>-->
+    <!--                        <td th:text="${match.winnerName}"></td>-->
+    <!--                    </tr>-->
+    <!--                    </tbody>-->
+    <!--                </table>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
+
+
+</div>
+<script>
+
+    <!--    new DataTable('.table-pvp-fpml',{-->
+    <!--        searching: false,-->
+    <!--    });-->
+
+</script>
+</body>
+</html>

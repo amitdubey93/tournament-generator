@@ -1,5 +1,6 @@
 package io.h2o.ufc.model;
 
+import io.h2o.ufc.dto.DailyFreePlayMatchCount;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -20,7 +20,7 @@ public class UfcApplication {
 
 	public static void excCommand() throws IOException {
 		Runtime rt = Runtime.getRuntime();
-		String url = "http://localhost:8080";
+		String url = "http://localhost:9006";
 		try {
 			rt.exec(new String[]{"cmd.exe", "/C", "start", "chrome", url});
 
