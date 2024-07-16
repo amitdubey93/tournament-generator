@@ -38,8 +38,8 @@ public class FreePlayMatchController {
         Collection<FreePlayMatch> freePlayList = freePlayMatchService.findAll();
         freePlayList.stream().forEach(match ->
         {
-            match.setPlayerOneImagePath("../" + playerMap.get(match.getPlayerOneId()).getImagePath());
-            match.setPlayerTwoImagePath("../" + playerMap.get(match.getPlayerTwoId()).getImagePath());
+            match.setPlayerOneImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(match.getPlayerOneId()).getImagePath());
+            match.setPlayerTwoImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(match.getPlayerTwoId()).getImagePath());
             match.setPlayerOneName(playerMap.get(match.getPlayerOneId()).getPlayerName());
             match.setPlayerTwoName(playerMap.get(match.getPlayerTwoId()).getPlayerName());
             String winner = match.getWinner() == 0 ? "Match Pending" : playerMap.get(match.getWinner()).getPlayerName();

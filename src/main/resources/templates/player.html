@@ -10,6 +10,7 @@
 <div th:replace="~{fragments/header :: header}">...</div>
 <div class="container my-5">
 
+    <div class="alert alert-primary" th:if="${msg}" th:text="${msg}"></div>
     <form action="#" enctype="multipart/form-data" id="playerForm" method="post" style="margin-bottom:20px"
           th:action="@{/player}"
           th:object="${player}">
@@ -38,7 +39,7 @@
     </form>
 
 
-    <h3 th:if="${playerList}">Tournaments</h3>
+    <h3 th:if="${playerList}">Players</h3>
     <table class="table table-striped table-responsive-md" id="playerTable" style="width:98%"
            th:if="${playerList}">
         <thead>

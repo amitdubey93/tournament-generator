@@ -1,5 +1,6 @@
 package io.h2o.ufc.controller;
 
+import io.h2o.ufc.Utility;
 import io.h2o.ufc.dto.PVPStats;
 import io.h2o.ufc.model.Player;
 import io.h2o.ufc.service.FreePlayMatchService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,9 +30,8 @@ import java.util.stream.Collectors;
 @Controller
 public class PlayerController {
 
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00");
     //    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads";
-    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/src/main/resources/static/images";
+    //public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/src/main/resources/static/images";
     @Autowired
     private PlayerService playerService;
 
@@ -40,6 +41,8 @@ public class PlayerController {
     @Autowired
     private FreePlayMatchService freePlayMatchService;
 
+//    @Autowired
+//    private FileStorageService fileStorageService;
 //    @Autowired
 //    ServletContext servletContext;
 //    private ServletWebServerApplicationContext servletContext;
@@ -100,23 +103,27 @@ public class PlayerController {
     }
 
     @PostMapping("/player")
-    public String createPlayer(@Valid @ModelAttribute("player") Player player, BindingResult bindingResult, Model model) throws IOException {
+    public String createPlayer(@Valid @ModelAttribute("player") Player player, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) throws IOException {
 
         Player player1 = playerService.save(player);
         System.err.println("saving player   :: " + player1);
 
         MultipartFile multipartFile = player.getPlayerImage();
 
+//        String fileName = fileStorageService.storeFile(multipartFile);
+
+
         StringBuilder fileNames = new StringBuilder();
-//        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, multipartFile.getOriginalFilename());
-        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, player1.getPlayerId() + ".jpg");
+//        Path fileNameAndPath = Paths.get(Utility.UPLOAD_DIRECTORY, multipartFile.getOriginalFilename());
+        Path fileNameAndPath = Paths.get(Utility.UPLOAD_DIRECTORY, "/images/" + player1.getPlayerId() + ".jpg");
         fileNames.append(player1.getPlayerId() + ".jpg");
 //        fileNames.append(multipartFile.getOriginalFilename());
         Files.write(fileNameAndPath, multipartFile.getBytes());
-        System.err.println("UPLOAD_DIRECTORY>> " + UPLOAD_DIRECTORY);
+        System.err.println("UPLOAD_DIRECTORY>> " + Utility.UPLOAD_DIRECTORY);
         System.err.println(fileNames);
-        //model.addAttribute("msg", "Uploaded images: " + fileNames.toString());
-        player1.setImagePath("images/" + player1.getPlayerId() + ".jpg");
+//        redirectAttributes.addAttribute("msg", "Uploaded images: " + fileName.toString());
+        redirectAttributes.addAttribute("msg", "Images Uploaded!! ");
+        player1.setImagePath("/images/" + player1.getPlayerId() + ".jpg");
         playerService.save(player1);
         return "redirect:player";
     }
@@ -133,7 +140,7 @@ public class PlayerController {
 
         Player player = freePlayMatchService.getPlayerFreePlayData(playerId);
         player.setPlayerName(playerMap.get(playerId).getPlayerName());
-        player.setImagePath("../" + playerMap.get(playerId).getImagePath());
+        player.setImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(playerId).getImagePath());
 
         float avgScore = (float) player.getScore() / (player.getMatchPlayed() == 0 ? 1 : player.getMatchPlayed());
         float oppAvgScore = (float) player.getOppScore() / (player.getMatchPlayed() == 0 ? 1 : player.getMatchPlayed());

@@ -1,5 +1,6 @@
 package io.h2o.ufc.service;
 
+import io.h2o.ufc.Utility;
 import io.h2o.ufc.model.Player;
 import io.h2o.ufc.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,14 @@ public class PlayerService {
     }
 
     public List<Player> getPlayerList() {
-        return playerRepository.findAll().stream().filter(player -> player.getPlayerId() < 2000).toList();
+
+        List<Player> playerList = playerRepository.findAll().stream().filter(player -> player.getPlayerId() < 2000).toList();
+        playerList.stream().forEach(
+                player -> {
+                    player.setImagePath(Utility.UPLOAD_DIRECTORY + player.getImagePath());
+                }
+        );
+        return playerList;
     }
 
 //    public int updatePlayerWinStats(int score, int playerId){

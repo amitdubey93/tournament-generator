@@ -1,5 +1,6 @@
 package io.h2o.ufc.service;
 
+import io.h2o.ufc.Utility;
 import io.h2o.ufc.dto.DailyFreePlayMatchCount;
 import io.h2o.ufc.dto.PVPStats;
 import io.h2o.ufc.model.FreePlayMatch;
@@ -73,7 +74,7 @@ public class FreePlayMatchService {
 
                 playerOne.setPlayerName(playerMap.get(playerOneId).getPlayerName());
                 playerOne.setPlayerId(playerMap.get(playerOneId).getPlayerId());
-                playerOne.setImagePath("../" + playerMap.get(playerOneId).getImagePath());
+                playerOne.setImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(playerOneId).getImagePath());
 
                 float winPercent1 = ((float) playerOne.getTotalWins() / (playerOne.getMatchPlayed() == 0 ? 1 : playerOne.getMatchPlayed())) * 100;
                 float avgScore1 = (float) playerOne.getScore() / (playerOne.getMatchPlayed() == 0 ? 1 : playerOne.getMatchPlayed());
@@ -82,7 +83,7 @@ public class FreePlayMatchService {
 
                 playerTwo.setPlayerName(playerMap.get(playerTwoId).getPlayerName());
                 playerTwo.setPlayerId(playerMap.get(playerTwoId).getPlayerId());
-                playerTwo.setImagePath("../" + playerMap.get(playerTwoId).getImagePath());
+                playerTwo.setImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(playerTwoId).getImagePath());
 
                 float winPercent2 = ((float) playerTwo.getTotalWins() / (playerTwo.getMatchPlayed() == 0 ? 1 : playerTwo.getMatchPlayed())) * 100;
                 float avgScore2 = (float) playerTwo.getScore() / (playerTwo.getMatchPlayed() == 0 ? 1 : playerTwo.getMatchPlayed());
@@ -102,8 +103,8 @@ public class FreePlayMatchService {
                 List<FreePlayMatch> freePlayList = freePlayMatchRepository.getPlayerVsPlayerFreePlayMatchList(playerOneId, playerTwoId);
                 freePlayList.stream().forEach(match ->
                 {
-                    match.setPlayerOneImagePath("../" + playerMap.get(match.getPlayerOneId()).getImagePath());
-                    match.setPlayerTwoImagePath("../" + playerMap.get(match.getPlayerTwoId()).getImagePath());
+                    match.setPlayerOneImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(match.getPlayerOneId()).getImagePath());
+                    match.setPlayerTwoImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(match.getPlayerTwoId()).getImagePath());
                     match.setPlayerOneName(playerMap.get(match.getPlayerOneId()).getPlayerName());
                     match.setPlayerTwoName(playerMap.get(match.getPlayerTwoId()).getPlayerName());
                     match.setWinnerName(playerMap.get(match.getWinner()).getPlayerName());

@@ -4,6 +4,16 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Utility {
+
+//    @Autowired
+//    private Properties properties;
+
+//    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads";
+//    public static String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/ufc-4.0.0.jar/BOOT-INF/classes/static/images";
+
+    public static String UPLOAD_DIRECTORY = "/uploads"; //to serve from uploads folder which is added in configuration
+//    public static String UPLOAD_DIRECTORY =""; //to serve from static folder
+
     public static Map<Integer, String> getGameType() {
         Map<Integer, String> gameMap = new TreeMap<>();
 //        gameMap.put(1,"F10");
