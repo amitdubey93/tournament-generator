@@ -3,6 +3,7 @@ package io.h2o.ufc.service;
 import io.h2o.ufc.Utility;
 import io.h2o.ufc.dto.DailyFreePlayMatchCount;
 import io.h2o.ufc.dto.PVPStats;
+import io.h2o.ufc.dto.PlayerActivity;
 import io.h2o.ufc.model.FreePlayMatch;
 import io.h2o.ufc.model.Player;
 import io.h2o.ufc.repository.FreePlayMatchRepository;
@@ -50,6 +51,10 @@ public class FreePlayMatchService {
 
     public List<DailyFreePlayMatchCount> getDailyFreePlayMatchCounts() {
         return freePlayMatchRepository.getDailyFreePlayMatchCounts();
+    }
+
+    public List<PlayerActivity> getPlayerWiseMatchPlayedPercent() {
+        return freePlayMatchRepository.getPlayerWiseMatchPlayedPercent();
     }
 
     public List<PVPStats> getPlayerCompleteStat(int playerOneId) {

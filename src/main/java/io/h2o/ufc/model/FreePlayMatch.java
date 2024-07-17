@@ -1,6 +1,7 @@
 package io.h2o.ufc.model;
 
 import io.h2o.ufc.dto.DailyFreePlayMatchCount;
+import io.h2o.ufc.dto.PlayerActivity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,25 @@ import java.util.Date;
                 columns = {
                         @ColumnResult(name = "matchCount", type = Integer.class),
                         @ColumnResult(name = "matchDate", type = String.class)
+                }
+        )
+)
+
+@NamedNativeQuery(
+        name = "getPlayerWiseMatchPlayedPercent",
+        query = "select ftbl.player_id as playerId, pl.player_name as playerName, round((final_match_count * 50/(select count(free_play_id) from free_play_matches where winner!=0)) , 2) as matchPlayedPercent " +
+                "from ( select sum(tbl.match_count) as final_match_count, player_id from (select rand(), count(free_play_id) as match_count, player_one_id as player_id from free_play_matches group by player_one_id union select rand(), count(free_play_id) as match_count, player_two_id as player_id from free_play_matches group by player_two_id ) as tbl group by player_id order by player_id) as ftbl " +
+                "join player as pl on pl.player_id = ftbl.player_id",
+        resultSetMapping = "result1"
+)
+@SqlResultSetMapping(
+        name = "result1",
+        classes = @ConstructorResult(
+                targetClass = PlayerActivity.class,
+                columns = {
+                        @ColumnResult(name = "playerId", type = Integer.class),
+                        @ColumnResult(name = "playerName", type = String.class),
+                        @ColumnResult(name = "matchPlayedPercent", type = Float.class)
                 }
         )
 )

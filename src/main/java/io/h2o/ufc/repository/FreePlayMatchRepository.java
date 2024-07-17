@@ -1,6 +1,7 @@
 package io.h2o.ufc.repository;
 
 import io.h2o.ufc.dto.DailyFreePlayMatchCount;
+import io.h2o.ufc.dto.PlayerActivity;
 import io.h2o.ufc.model.FreePlayMatch;
 import io.h2o.ufc.model.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,6 +39,9 @@ public interface FreePlayMatchRepository extends JpaRepository<FreePlayMatch, In
     //    @Query("select new io.h2o.ufc.dto.DailyFreePlayMatchCount( count(freePlayId), date_format(matchTime,'%Y-%m-%d')) from FreePlatMatch group by date_format(matchTime,'%Y-%m-%d') order by matchTime")
     @Query(name = "getDailyFreePlayMatchCounts", nativeQuery = true)
     public List<DailyFreePlayMatchCount> getDailyFreePlayMatchCounts();
+
+    @Query(name = "getPlayerWiseMatchPlayedPercent", nativeQuery = true)
+    public List<PlayerActivity> getPlayerWiseMatchPlayedPercent();
 
     @Query("SELECT DISTINCT(playerOneId) from FreePlayMatch where (playerOneId = :playerId or playerTwoId = :playerId) union SELECT DISTINCT(playerTwoId) from FreePlayMatch where (playerOneId = :playerId or playerTwoId = :playerId)")
     public List<Integer> getPlayerOneVsPlayerList(int playerId);

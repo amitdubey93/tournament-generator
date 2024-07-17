@@ -10,9 +10,13 @@
     <div th:replace="~{fragments/header :: header}">...</div>
     <div class="container my-2">
         <!--        <h3>Ultimate Fight Championship</h3>-->
-        <h3>Daily FreePlay Stats</h3>
-        <div id="chartContainer" style="height: 300px; width: 80%;margin:auto;"></div>
+        <!--        <h3>Daily FreePlay Stats</h3>-->
+        <div class="row my-3">
+            <div class="col-6" id="chartContainer" style="height: 300px; width: 80%;margin:auto;"></div>
+            <div class="col-6" id="pieChartContainer" style="height: 300px; width: 80%;margin:auto;"></div>
+        </div>
         <p class="form-control" hidden="hidden" id="dailyFreePlayMatchCounts" th:text="${dailyFreePlayMatchCounts}"></p>
+        <p class="form-control" hidden="hidden" id="playerActivity" th:text="${playerActivity}"></p>
 
 
         <!--        <input type="text" id="dailyFreePlayMatchCounts" class="form-control" th:value="{dailyFreePlayMatchCounts}"/>-->
@@ -46,45 +50,77 @@
 
     //var matchData = $('#dailyFreePlayMatchCountsTable').tableToJSON();
 
-<!--    var matchData = $('#dailyFreePlayMatchCountsTable tr:has(td)').map(function(i, v) {-->
-<!--    var $td =  $('td', this);-->
-<!--        return {-->
-<!--                 x: new Date($td.eq(0).text()),-->
-<!--                 y: parseInt($td.eq(1).text())-->
-<!--               }-->
-<!--        }).get();-->
+    <!--    var matchData = $('#dailyFreePlayMatchCountsTable tr:has(td)').map(function(i, v) {-->
+    <!--    var $td =  $('td', this);-->
+    <!--        return {-->
+    <!--                 x: new Date($td.eq(0).text()),-->
+    <!--                 y: parseInt($td.eq(1).text())-->
+    <!--               }-->
+    <!--        }).get();-->
 
 
-    var dataPoints = [];
-    var matchData = JSON.parse($('#dailyFreePlayMatchCounts').html());
+        var dataPoints = [];
+        var pieChartDataPoints = [];
+        var matchData = JSON.parse($('#dailyFreePlayMatchCounts').html());
+        var pieChartData = JSON.parse($('#playerActivity').html());
 
-    var options = {
-        animationEnabled: true,
-        title:{
-            text: "Daily FreePlay MatchCount"
-        },
-        axisX: {
-            valueFormatString: "DD MMM"
-        },
-        axisY: {
-            title: "Match Count"
-        },
-        data: [{
-            type: "spline",
-            dataPoints: dataPoints
-        }]
-    };
+        var options = {
+            animationEnabled: true,
+            title:{
+                text: "Daily FreePlay MatchCount"
+            },
+            axisX: {
+                valueFormatString: "DD MMM"
+            },
+            axisY: {
+                title: "Match Count"
+            },
+            data: [{
+                type: "spline",
+                dataPoints: dataPoints
+            }]
+        };
+
+        var pieChartOptions = {
+            title: {
+                text: "Player's Overall Activity"
+            },
+            subtitles: [{
+                text: "shown in below pie chart"
+            }],
+            theme: "light2",
+            animationEnabled: true,
+            data: [{
+                type: "pie",
+                startAngle: 40,
+                toolTipContent: "<b>{label}</b>: {y}%",
+                showInLegend: "true",
+                legendText: "{label}",
+                indexLabelFontSize: 16,
+                indexLabel: "{label} - {y}%",
+                dataPoints: pieChartDataPoints
+            }]
+        };
 
 
-    for (var i = 0; i < matchData.length; i++) {
-        dataPoints.push({
-            x: new Date(matchData[i].matchDate),
-            y: matchData[i].matchCount
-        });
-    }
-    console.log(matchData);
-    console.log(dataPoints);
-    $("#chartContainer").CanvasJSChart(options);
+        for (var i = 0; i < matchData.length; i++) {
+            dataPoints.push({
+                x: new Date(matchData[i].matchDate),
+                y: matchData[i].matchCount
+            });
+        }
+        for (var i = 0; i < pieChartData.length; i++) {
+            pieChartDataPoints.push({
+                y: pieChartData[i].matchPlayedPercent,
+                label: pieChartData[i].playerName
+            });
+        }
+        console.log(matchData);
+        console.log(dataPoints);
+        console.log(pieChartData);
+        console.log(pieChartOptions);
+        $("#chartContainer").CanvasJSChart(options);
+        $("#pieChartContainer").CanvasJSChart(pieChartOptions);
 
     }
 </script>
