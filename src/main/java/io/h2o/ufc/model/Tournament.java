@@ -1,6 +1,8 @@
 package io.h2o.ufc.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -22,13 +24,15 @@ public class Tournament {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tournament_sequence")
     private int tournamentId;
 
-    //    @NotNull
-//    @Size(min=2, max=30)
+    @NotBlank(message = "Name must have a value")
+    @Size(max = 30, message = "Name max length should be under 30 char")
     private String tournamentName;
+
     private int winner;
     private boolean allMatchesCompleted;
     private Date tournamentDate;
     private int playerCount;
+    private int gameType;
 
 
     @OneToMany(mappedBy="tournament",cascade=CascadeType.ALL)
@@ -43,6 +47,7 @@ public class Tournament {
     private String winnerName;
 
     @Transient
+    @Size(min = 3, message = "Minimum 3 Players Needed to create a Tournament")
     private List<Player> playerList;
 
 }

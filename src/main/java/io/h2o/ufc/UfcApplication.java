@@ -20,10 +20,10 @@ public class UfcApplication {
 
 	public static void excCommand() throws IOException {
 		Runtime rt = Runtime.getRuntime();
-//		String url = "http://localhost:8080";
-		String url = "http://localhost:9006";
+        String url = "http://localhost:8080/player";
+//		String url = "http://localhost:9008";
 		try {
-			rt.exec(new String[]{"cmd.exe", "/C", "start", "chrome", url});
+            rt.exec(new String[]{"cmd.exe", "/C", "start", "msedge", url});
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

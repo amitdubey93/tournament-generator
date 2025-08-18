@@ -2,6 +2,7 @@ package io.h2o.ufc.controller;
 
 import io.h2o.ufc.Utility;
 import io.h2o.ufc.dto.PVPStats;
+import io.h2o.ufc.dto.PlayerStatsByGameTypeDTO;
 import io.h2o.ufc.model.Player;
 import io.h2o.ufc.service.FreePlayMatchService;
 import io.h2o.ufc.service.PlayerService;
@@ -48,9 +49,8 @@ public class PlayerController {
 //    private ServletWebServerApplicationContext servletContext;
 
 
-    @GetMapping("/player_stats")
-    public String getAllPlayers(Model model) {
-//        System.out.println(playerService.findAll());
+    @GetMapping("/player_stats1")
+    public String getPlayerStats1(Model model) {
 
         DecimalFormat df = new DecimalFormat("#.##");
         df.setMaximumFractionDigits(2);
@@ -95,6 +95,17 @@ public class PlayerController {
         return "player_stats";
     }
 
+    @GetMapping("/stats")
+    public String getPlayerStats(Model model) {
+
+        List<PlayerStatsByGameTypeDTO> playerFreePlayList = freePlayMatchService.getFreePlayStats();
+        List<PlayerStatsByGameTypeDTO> playerTournamentList = freePlayMatchService.getTournamentStats();
+
+        model.addAttribute("playerFreePlayList", playerFreePlayList);
+        model.addAttribute("playerTournamentList", playerTournamentList);
+        return "player_stats";
+    }
+
     @GetMapping("/player")
     public String getPlayerPage(Player player, Model model) {
         List<Player> playerList = playerService.getPlayerList();
@@ -104,28 +115,58 @@ public class PlayerController {
 
     @PostMapping("/player")
     public String createPlayer(@Valid @ModelAttribute("player") Player player, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) throws IOException {
+        List<Player> playerList = playerService.getPlayerList();
+        model.addAttribute("playerList", playerList);
+
+        MultipartFile multipartFile = player.getPlayerImageFile();
+        System.err.println("multipartFile.getBytes().length>> " + multipartFile.getBytes().length);
+//        System.err.println("multipartFile size:: "+multipartFile.getSize());
+//        ObjectError playerImageSizeError = new ObjectError("playerImage","playerImage size should be less than 50 kb");
+//        ObjectError playerImageEmptyError = new ObjectError("playerImage","Image Empty!!!");
+        if (multipartFile.getBytes().length > 1024 * 50) {
+//            bindingResult.addError(playerImageSizeError);
+            bindingResult.rejectValue("playerImageFile", "file.size", "Image size should be less than 50 kb.");
+//            bindingResult.getAllErrors().stream().forEach(System.out::println);
+//            System.err.println("ErrorCount:: "+bindingResult.getErrorCount());
+//            System.err.println("FieldErrors:: "+bindingResult.getFieldErrors());
+//            System.err.println("Model:: "+bindingResult.getModel());
+//            System.err.println("ObjectName:: "+bindingResult.getObjectName());
+//            System.err.println("Class:: "+bindingResult.getClass());
+//            return "player";
+        }
+        if (multipartFile.getBytes().length == 0) {
+//            bindingResult.addError(playerImageEmptyError);
+            bindingResult.rejectValue("playerImageFile", "file.empty", "Please select an Image.");
+//            bindingResult.getAllErrors().stream().forEach(System.out::println);
+//            System.err.println("ErrorCount:: "+bindingResult.getErrorCount());
+//            System.err.println("FieldErrors:: "+bindingResult.getFieldErrors());
+//            System.err.println("Model:: "+bindingResult.getModel());
+//            System.err.println("ObjectName:: "+bindingResult.getObjectName());
+//            System.err.println("Class:: "+bindingResult.getClass());
+//            return "player";
+        }
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors().stream().forEach(System.err::println);
+            return "player";
+        }
+//        String fileName = fileStorageService.storeFile(multipartFile);
+
 
         Player player1 = playerService.save(player);
         System.err.println("saving player   :: " + player1);
 
-        MultipartFile multipartFile = player.getPlayerImage();
-
-//        String fileName = fileStorageService.storeFile(multipartFile);
-
-
         StringBuilder fileNames = new StringBuilder();
-//        Path fileNameAndPath = Paths.get(Utility.UPLOAD_DIRECTORY, multipartFile.getOriginalFilename());
         Path fileNameAndPath = Paths.get(Utility.UPLOAD_DIRECTORY, "/images/" + player1.getPlayerId() + ".jpg");
         fileNames.append(player1.getPlayerId() + ".jpg");
-//        fileNames.append(multipartFile.getOriginalFilename());
         Files.write(fileNameAndPath, multipartFile.getBytes());
-        System.err.println("UPLOAD_DIRECTORY>> " + Utility.UPLOAD_DIRECTORY);
         System.err.println(fileNames);
 //        redirectAttributes.addAttribute("msg", "Uploaded images: " + fileName.toString());
-        redirectAttributes.addAttribute("msg", "Images Uploaded!! ");
-        player1.setImagePath("/images/" + player1.getPlayerId() + ".jpg");
+        player1.setImagePath("/uploads/images/" + player1.getPlayerId() + ".jpg");
         playerService.save(player1);
-        return "redirect:player";
+
+
+        redirectAttributes.addFlashAttribute("msg", "Images Uploaded!! ");
+        return "redirect:/player";
     }
 
     @GetMapping("/player/{playerId}")
@@ -140,7 +181,7 @@ public class PlayerController {
 
         Player player = freePlayMatchService.getPlayerFreePlayData(playerId);
         player.setPlayerName(playerMap.get(playerId).getPlayerName());
-        player.setImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(playerId).getImagePath());
+        player.setImagePath(playerMap.get(playerId).getImagePath());
 
         float avgScore = (float) player.getScore() / (player.getMatchPlayed() == 0 ? 1 : player.getMatchPlayed());
         float oppAvgScore = (float) player.getOppScore() / (player.getMatchPlayed() == 0 ? 1 : player.getMatchPlayed());
@@ -155,11 +196,24 @@ public class PlayerController {
 
         System.err.println(player);
 
-        List<PVPStats> pvpStatsList = freePlayMatchService.getPlayerCompleteStat(playerId);
-        System.err.println(pvpStatsList);
+        List<PlayerStatsByGameTypeDTO> playerStatsByGameType = freePlayMatchService.getPlayerStatsByGameType(playerId);
+        playerStatsByGameType.stream().forEach(playerStatsDTO -> {
+            playerStatsDTO.setGameTypeName(Utility.getGameType().get(playerStatsDTO.getGameType()));
+        });
+
+        List<PVPStats> pvpCompleteStat = freePlayMatchService.getPvpCompleteStat(playerId);
+//        System.err.println("playerStatsByGameType::>> "+playerStatsByGameType);
+//        System.err.println("pvpCompleteStat::>> "+pvpCompleteStat);
+
+//        playerStatsByGameType.stream().forEach(System.err::println);
+//        pvpCompleteStat.stream().forEach(pvpStats -> {
+//            pvpStats.getPvpStatsByGameTypeList().stream().forEach(System.out::println);
+//            pvpStats.getFreePlayMatchList().stream().forEach(System.err::println);
+//        });
 
         model.addAttribute("playerStat", player);
-        model.addAttribute("playerVsPlayerStatList", pvpStatsList);
-        return "player_info";
+        model.addAttribute("playerStatsByGameType", playerStatsByGameType);
+        model.addAttribute("pvpCompleteStat", pvpCompleteStat);
+        return "player_info_2";
     }
 }

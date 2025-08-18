@@ -1,6 +1,7 @@
 package io.h2o.ufc.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,12 +21,15 @@ public class Player {
     @SequenceGenerator(name = "player_sequence", sequenceName = "player_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "player_sequence")
     private int playerId;
+
+    @NotBlank(message = "Name must not be blank.")
     private String playerName;
+    @NotBlank(message = "NickName must not be blank.")
     private String playerNickName;
     private String imagePath;
 
     @Transient
-    private MultipartFile playerImage;
+    private MultipartFile playerImageFile;
 
     @Transient
     private int matchPlayed;
@@ -35,6 +39,8 @@ public class Player {
     private int oppScore;
     @Transient
     private int totalWins;
+    @Transient
+    private int totalLost;
     @Transient
     private float winPercent;
     @Transient

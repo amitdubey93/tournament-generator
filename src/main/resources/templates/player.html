@@ -20,15 +20,19 @@
         <div class="row">
             <div class="form-group col-lg-4 col-sm-6">
                 <p>Name: <input class="form-control" th:field="*{playerName}" type="text"/></p>
-                <p th:errors="*{playerName}" th:if="${#fields.hasErrors('playerName')}">Name Error</p>
+                <small class="form-text text-danger" th:errors="*{playerName}"
+                       th:if="${#fields.hasErrors('playerName')}">Name Error</small>
             </div>
             <div class="form-group col-lg-4 col-sm-6">
                 <p>Nick Name: <input class="form-control" th:field="*{playerNickName}" type="text"/></p>
-                <p th:errors="*{playerNickName}" th:if="${#fields.hasErrors('playerNickName')}">Name Error</p>
+                <small class="form-text text-danger" th:errors="*{playerNickName}"
+                       th:if="${#fields.hasErrors('playerNickName')}">NickName Error</small>
             </div>
             <div class="form-group col-lg-4 col-sm-6">
-                <p>Player Name: <input class="form-control-file" th:field="*{playerImage}" type="file"/></p>
-                <p th:errors="*{playerImage}" th:if="${#fields.hasErrors('playerImage')}">Image Error</p>
+                <p>Player Name: <input class="form-control-file" th:field="*{playerImageFile}" type="file"/></p>
+                <!--                <small class="form-text text-danger" th:errors="${playerImageFile}">Image Error</small>-->
+                <small class="form-text text-danger" th:errors="*{playerImageFile}"
+                       th:if="${#fields.hasErrors('playerImageFile')}">Image Error</small>
             </div>
 
         </div>

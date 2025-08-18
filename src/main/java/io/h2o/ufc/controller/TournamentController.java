@@ -2,6 +2,7 @@ package io.h2o.ufc.controller;
 
 import io.h2o.ufc.ScheduleGenerator;
 import io.h2o.ufc.Utility;
+import io.h2o.ufc.dto.PlayerStatsByGameTypeDTO;
 import io.h2o.ufc.model.Player;
 import io.h2o.ufc.model.PointsTable;
 import io.h2o.ufc.model.Tournament;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Collection;
 import java.util.Date;
@@ -66,6 +68,7 @@ public class TournamentController {
         model.addAttribute("tournamentList", tournamentList);
         //model.addAttribute("matchList", null);
         model.addAttribute("playerList", playerService.getPlayerList());
+        model.addAttribute("gameTypeMap", Utility.getGameType());
         return "tournament";
     }
 
@@ -84,8 +87,8 @@ public class TournamentController {
         //Collection<TournamentMatch> tournamentFinalsMatchList = tournamentMatchList.stream().filter(tournamentMatch -> tournamentMatch.getRoundNo() != 2001).toList();
         tournamentMatchList.stream().forEach(match ->
        {
-           match.setPlayerOneImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(match.getPlayerOneId()).getImagePath());
-           match.setPlayerTwoImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(match.getPlayerTwoId()).getImagePath());
+           match.setPlayerOneImagePath(playerMap.get(match.getPlayerOneId()).getImagePath());
+           match.setPlayerTwoImagePath(playerMap.get(match.getPlayerTwoId()).getImagePath());
            match.setPlayerOneName(playerMap.get(match.getPlayerOneId()).getPlayerName());
            match.setPlayerTwoName(playerMap.get(match.getPlayerTwoId()).getPlayerName());
            String winner = match.getWinner() == 0 ? "Match Pending" : playerMap.get(match.getWinner()).getPlayerName();
@@ -96,9 +99,11 @@ public class TournamentController {
 
         Collection<PointsTable> pointsTable = tournament.getPointsTable().stream().sorted(
                 (pt1, pt2) -> Integer.compare(pt2.getScore(), pt1.getScore())).toList();
-
         pointsTable.stream().forEach(pt -> pt.setPlayerName(playerMap.get(pt.getPlayerId()).getPlayerName()));
-//        System.err.println(matchList);
+        List<PlayerStatsByGameTypeDTO> pointsTable2 = tournamentMatchService.getPointsTable(id);
+        pointsTable2.stream().sorted(
+                (pt1, pt2) -> Integer.compare(pt2.getScore(), pt1.getScore())).toList();
+
 //        System.err.println(pointsTable);
 
         model.addAttribute("tournamentId", tournament.getTournamentId());
@@ -129,6 +134,7 @@ public class TournamentController {
         model.addAttribute("tournamentFinalsMatchList", tournamentFinalsMatchList);
 
         model.addAttribute("pointsTable", pointsTable);
+        model.addAttribute("pointsTable2", pointsTable2);
 
         model.addAttribute("tournamentMatch", new TournamentMatch());
 //        log.info("tournamentLeagueMatchList::  " + tournamentLeagueMatchList);
@@ -137,15 +143,19 @@ public class TournamentController {
     }
 
     @PostMapping("/tournament")
-    public String createTournament(@Valid @ModelAttribute("tournament") Tournament tournament, BindingResult bindingResult, Model model) {
-        System.err.println(bindingResult.hasErrors());
-        //System.err.println(bindingResult);
+    public String createTournament(@Valid @ModelAttribute("tournament") Tournament tournament, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+
+        model.addAttribute("tournamentList", tournamentService.findAll());
+        model.addAttribute("playerList", playerService.getPlayerList());
+        model.addAttribute("gameTypeMap", Utility.getGameType());
+        System.err.println("has error::>>  " + bindingResult.hasErrors());
+        System.err.println(bindingResult);
         log.info("bindingResult:: "+bindingResult);
         if (bindingResult.hasErrors()) {
-            return "redirect:tournament";
+            return "tournament";
         }
 
-        System.err.println(tournament.getPlayerList());
+        //System.err.println(tournament.getPlayerList());
         ScheduleGenerator generator = new ScheduleGenerator();
         List<Integer> players = tournament.getPlayerList().stream().map(Player::getPlayerId).toList();
 //        List<Integer> players = playerService.findAll().stream().map(Player::getPlayerId).toList();
@@ -169,10 +179,13 @@ public class TournamentController {
         tournament.setTournamentDate(new Date());
         tournament.setPlayerCount(pointsTable.size());
         tournamentService.save(tournament);
-        model.addAttribute("tournamentList", tournamentService.findAll());
         //model.addAttribute("matchList", null);
+
+        redirectAttributes.addFlashAttribute("msg", "Tournament Created Successfully. ID:> " + tournament.getTournamentId());
+//        model.addAttribute("tournament", new Tournament());
+//        model.addAttribute("tournamentList", tournamentService.findAll());
         log.info("Create Tournament Request");
-        return "redirect:tournament";
+        return "redirect:/tournament";
     }
 
 

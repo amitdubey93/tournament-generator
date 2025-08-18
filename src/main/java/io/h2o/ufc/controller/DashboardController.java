@@ -19,18 +19,25 @@ public class DashboardController {
     private FreePlayMatchService freePlayMatchService;
 
     @GetMapping("/")
+    public String redirect() {
+        return "redirect:/dashboard";
+    }
+
+    @GetMapping("/dashboard")
     public String viewHomePage(Model model) throws JsonProcessingException {
         ObjectMapper Obj = new ObjectMapper();
 
         List<DailyFreePlayMatchCount> dailyFreePlayMatchCounts = freePlayMatchService.getDailyFreePlayMatchCounts();
         List<PlayerActivity> playerActivity = freePlayMatchService.getPlayerWiseMatchPlayedPercent();
+//        dailyFreePlayMatchCounts.stream().filter(data -> data.getMatchCount() > 10).toList();
+//        dailyFreePlayMatchCounts.stream().filter(data -> Objects.equals(data.getMatchDate(), "2024-06-18") || Objects.equals(data.getMatchDate(), "2024-06-122")).toList();
 
         String dailyFreePlayMatchCountsJsonStr = Obj.writeValueAsString(dailyFreePlayMatchCounts);
         String playerActivityJsonStr = Obj.writeValueAsString(playerActivity);
-        System.err.println(dailyFreePlayMatchCountsJsonStr);
-        System.err.println(dailyFreePlayMatchCounts);
-        System.err.println("playerActivity>>>   " + playerActivity);
-        System.err.println("playerActivityJsonStr>>>   " + playerActivityJsonStr);
+//        System.err.println(dailyFreePlayMatchCountsJsonStr);
+//        System.err.println(dailyFreePlayMatchCounts);
+//        System.err.println("playerActivity>>>   " + playerActivity);
+//        System.err.println("playerActivityJsonStr>>>   " + playerActivityJsonStr);
 
         model.addAttribute("dailyFreePlayMatchCounts", dailyFreePlayMatchCountsJsonStr);
         model.addAttribute("playerActivity", playerActivityJsonStr);

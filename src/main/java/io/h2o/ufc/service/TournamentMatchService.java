@@ -1,5 +1,6 @@
 package io.h2o.ufc.service;
 
+import io.h2o.ufc.dto.PlayerStatsByGameTypeDTO;
 import io.h2o.ufc.model.TournamentMatch;
 import io.h2o.ufc.repository.TournamentMatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class TournamentMatchService {
         return tournamentMatchRepository.findAll();
     }
 
+    public List<PlayerStatsByGameTypeDTO> getPointsTable(int tourId) {
+        return tournamentMatchRepository.getPointsTable(tourId);
+    }
     public int updateTournamentMatchScore(int playerOneScore, int playerTwoScore, int winner, int matchId) {
         return tournamentMatchRepository.updateTournamentMatchScore(playerOneScore, playerTwoScore, winner, matchId, new Date());
     }

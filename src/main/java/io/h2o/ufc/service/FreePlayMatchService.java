@@ -1,9 +1,7 @@
 package io.h2o.ufc.service;
 
 import io.h2o.ufc.Utility;
-import io.h2o.ufc.dto.DailyFreePlayMatchCount;
-import io.h2o.ufc.dto.PVPStats;
-import io.h2o.ufc.dto.PlayerActivity;
+import io.h2o.ufc.dto.*;
 import io.h2o.ufc.model.FreePlayMatch;
 import io.h2o.ufc.model.Player;
 import io.h2o.ufc.repository.FreePlayMatchRepository;
@@ -48,6 +46,18 @@ public class FreePlayMatchService {
         return freePlayMatchRepository.getPlayerFreePlayData(playerId);
     }
 
+    public List<PlayerStatsByGameTypeDTO> getPlayerStatsByGameType(int playerId) {
+        return freePlayMatchRepository.getPlayerStatsByGameType(playerId);
+    }
+
+    public List<PlayerStatsByGameTypeDTO> getFreePlayStats() {
+        return freePlayMatchRepository.getFreePlayStats();
+    }
+
+    public List<PlayerStatsByGameTypeDTO> getTournamentStats() {
+        return freePlayMatchRepository.getTournamentStats();
+    }
+
 
     public List<DailyFreePlayMatchCount> getDailyFreePlayMatchCounts() {
         return freePlayMatchRepository.getDailyFreePlayMatchCounts();
@@ -57,7 +67,7 @@ public class FreePlayMatchService {
         return freePlayMatchRepository.getPlayerWiseMatchPlayedPercent();
     }
 
-    public List<PVPStats> getPlayerCompleteStat(int playerOneId) {
+    public List<PVPStats> getPvpCompleteStat(int playerOneId) {
 
         DecimalFormat df = new DecimalFormat("#.##");
         df.setMaximumFractionDigits(2);
@@ -73,55 +83,80 @@ public class FreePlayMatchService {
         for (int playerTwoId : vsPlayerList) {
             if (playerOneId != playerTwoId) {
 
-                Player playerOne = freePlayMatchRepository.getPlayerVsPlayerFreePlayData(playerOneId, playerTwoId);
-                Player playerTwo = freePlayMatchRepository.getPlayerVsPlayerFreePlayData(playerTwoId, playerOneId);
 
+//                Player playerOne = freePlayMatchRepository.getPlayerVsPlayerFreePlayData(playerOneId, playerTwoId);
+//                Player playerTwo = freePlayMatchRepository.getPlayerVsPlayerFreePlayData(playerTwoId, playerOneId);
+//
+//
+//                playerOne.setPlayerName(playerMap.get(playerOneId).getPlayerName());
+//                playerOne.setPlayerId(playerMap.get(playerOneId).getPlayerId());
+//                playerOne.setImagePath(playerMap.get(playerOneId).getImagePath());
+//
+//                float winPercent1 = ((float) playerOne.getTotalWins() / (playerOne.getMatchPlayed() == 0 ? 1 : playerOne.getMatchPlayed())) * 100;
+//                float avgScore1 = (float) playerOne.getScore() / (playerOne.getMatchPlayed() == 0 ? 1 : playerOne.getMatchPlayed());
+//                playerOne.setWinPercent(Float.parseFloat(df.format(winPercent1)));
+//                playerOne.setAvgScore(Float.parseFloat(df.format(avgScore1)));
+//
+//                playerTwo.setPlayerName(playerMap.get(playerTwoId).getPlayerName());
+//                playerTwo.setPlayerId(playerMap.get(playerTwoId).getPlayerId());
+//                playerTwo.setImagePath(playerMap.get(playerTwoId).getImagePath());
+//
+//                float winPercent2 = ((float) playerTwo.getTotalWins() / (playerTwo.getMatchPlayed() == 0 ? 1 : playerTwo.getMatchPlayed())) * 100;
+//                float avgScore2 = (float) playerTwo.getScore() / (playerTwo.getMatchPlayed() == 0 ? 1 : playerTwo.getMatchPlayed());
+//                playerTwo.setWinPercent(Float.parseFloat(df.format(winPercent2)));
+//                playerTwo.setAvgScore(Float.parseFloat(df.format(avgScore2)));
 
-                playerOne.setPlayerName(playerMap.get(playerOneId).getPlayerName());
-                playerOne.setPlayerId(playerMap.get(playerOneId).getPlayerId());
-                playerOne.setImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(playerOneId).getImagePath());
+//                float winMargin;
+//                String winningPlayerName;
+//                if (avgScore1 > avgScore2) {
+//                    winMargin = (avgScore1 - avgScore2) * 10;
+//                    winningPlayerName = playerOne.getPlayerName();
+//                } else {
+//                    winMargin = (avgScore2 - avgScore1) * 10;
+//                    winningPlayerName = playerTwo.getPlayerName();
+//                }
 
-                float winPercent1 = ((float) playerOne.getTotalWins() / (playerOne.getMatchPlayed() == 0 ? 1 : playerOne.getMatchPlayed())) * 100;
-                float avgScore1 = (float) playerOne.getScore() / (playerOne.getMatchPlayed() == 0 ? 1 : playerOne.getMatchPlayed());
-                playerOne.setWinPercent(Float.parseFloat(df.format(winPercent1)));
-                playerOne.setAvgScore(Float.parseFloat(df.format(avgScore1)));
+                List<PVPStatsByGameTypeDTO> pvpStatsByGameTypeList = freePlayMatchRepository.getPVPStatsByGameType(playerOneId, playerTwoId);
 
-                playerTwo.setPlayerName(playerMap.get(playerTwoId).getPlayerName());
-                playerTwo.setPlayerId(playerMap.get(playerTwoId).getPlayerId());
-                playerTwo.setImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(playerTwoId).getImagePath());
+                pvpStatsByGameTypeList.stream().forEach(stats -> {
+                    stats.setGameTypeName(Utility.getGameType().get(stats.getGameType()));
 
-                float winPercent2 = ((float) playerTwo.getTotalWins() / (playerTwo.getMatchPlayed() == 0 ? 1 : playerTwo.getMatchPlayed())) * 100;
-                float avgScore2 = (float) playerTwo.getScore() / (playerTwo.getMatchPlayed() == 0 ? 1 : playerTwo.getMatchPlayed());
-                playerTwo.setWinPercent(Float.parseFloat(df.format(winPercent2)));
-                playerTwo.setAvgScore(Float.parseFloat(df.format(avgScore2)));
+                    stats.setPlayerOneName(playerMap.get(stats.getPlayerOneId()).getPlayerName());
+                    stats.setPlayerTwoName(playerMap.get(stats.getPlayerTwoId()).getPlayerName());
+                    stats.setPlayerOneImagePath(playerMap.get(stats.getPlayerOneId()).getImagePath());
+                    stats.setPlayerTwoImagePath(playerMap.get(stats.getPlayerTwoId()).getImagePath());
 
-                float winMargin;
-                String winningPlayerName;
-                if (avgScore1 > avgScore2) {
-                    winMargin = (avgScore1 - avgScore2) * 10;
-                    winningPlayerName = playerOne.getPlayerName();
-                } else {
-                    winMargin = (avgScore2 - avgScore1) * 10;
-                    winningPlayerName = playerTwo.getPlayerName();
-                }
+                    stats.setScoreMargin((stats.getPlayerOneAvgScore() - stats.getPlayerTwoAvgScore()) * 10);
+                    int winningPlayerId = stats.getPlayerOneAvgScore() > stats.getPlayerTwoAvgScore() ? stats.getPlayerOneId() : stats.getPlayerTwoId();
+                    stats.setWinningPlayerName(playerMap.get(winningPlayerId).getPlayerName());
+                });
+                pvpStatsByGameTypeList.stream().forEach(System.out::println);
 
                 List<FreePlayMatch> freePlayList = freePlayMatchRepository.getPlayerVsPlayerFreePlayMatchList(playerOneId, playerTwoId);
                 freePlayList.stream().forEach(match ->
                 {
-                    match.setPlayerOneImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(match.getPlayerOneId()).getImagePath());
-                    match.setPlayerTwoImagePath(Utility.UPLOAD_DIRECTORY + playerMap.get(match.getPlayerTwoId()).getImagePath());
+                    match.setPlayerOneImagePath(playerMap.get(match.getPlayerOneId()).getImagePath());
+                    match.setPlayerTwoImagePath(playerMap.get(match.getPlayerTwoId()).getImagePath());
                     match.setPlayerOneName(playerMap.get(match.getPlayerOneId()).getPlayerName());
                     match.setPlayerTwoName(playerMap.get(match.getPlayerTwoId()).getPlayerName());
                     match.setWinnerName(playerMap.get(match.getWinner()).getPlayerName());
+                    match.setGameTypeName(Utility.getGameType().get(match.getGameType()));
                 });
                 //System.err.println("freePlayList " + freePlayList);
 
+//                pvpStatsList.add(
+//                        new PVPStats(
+//                                playerOne,
+//                                playerTwo,
+//                                winningPlayerName,
+//                                Float.parseFloat(df.format(winMargin)),
+//                                freePlayList
+//                        ));
                 pvpStatsList.add(
                         new PVPStats(
-                                playerOne,
-                                playerTwo,
-                                winningPlayerName,
-                                Float.parseFloat(df.format(winMargin)),
+                                playerTwoId,
+                                playerMap.get(playerTwoId).getPlayerName(),
+                                pvpStatsByGameTypeList,
                                 freePlayList
                         ));
             }

@@ -24,6 +24,8 @@
 
     <script th:src="@{/scripts/jquery.tabletojson.min.js}"></script>
 
+    <script th:src="@{/scripts/github_contribution.js}"></script>
+
     <!--    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />-->
     <!--    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>-->
 
@@ -44,7 +46,8 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-              <a class="nav-link" th:href="@{/}">Home</a>
+              <a class="nav-link" th:href="@{/dashboard}">Home</a>
+              <!--              <a class="nav-link" th:href="@{/}">Home</a>-->
           </li>
           <li class="nav-item">
               <a class="nav-link" th:href="@{/tournament}">Tournaments</a>
@@ -53,12 +56,33 @@
               <a class="nav-link" th:href="@{/freePlay}">FreePlay</a>
           </li>
           <li class="nav-item">
-              <a class="nav-link" th:href="@{/player_stats}">Player Stats</a>
+              <a class="nav-link" th:href="@{/stats}">Player Stats</a>
           </li>
           <li class="nav-item">
               <a class="nav-link" th:href="@{/player}">Add Player</a>
           </li>
       </ul>
+    </div>
+    <!--    <div class="row" th:text="${#httpServletRequest.getRequestURI()}"></div>-->
+    <script>
+        $( document ).ready(function() {
+
+            console.log( "ready!" );
+            currLoc = $(location).attr('href');
+            console.log('curr uri :: '+currLoc);
+            //var str2 = "/freePlay";
+            //$('#navbarSupportedContent li').siblings().removeClass('active font-weight-bold');
+            $('#navbarSupportedContent li').each(function(){
+              var href = $(this).find('a').attr('href');
+              console.log('href:  '+href);
+              if(currLoc.indexOf(href) != -1){
+                console.log(href + " found");
+                $(this).find('a').addClass('active font-weight-bold');
+              }
+            })
+
+        });
+    </script>
     </div>
 </nav>
 </body>

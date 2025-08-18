@@ -25,22 +25,65 @@
 <!--        <div class="col" th:text="${playerCount}">2</div>-->
 <!--    </div>-->
     <div class="row justify-content-sm-center">
-        <div class="col-lg-4 col-sm-8">
-            <div class="row my-card">
-                <div class="col-sm-6 col-md-12">
-                    <h5 th:text="${tournamentName}">Tournament Name</h5>
-                    <h4 th:text="${#dates.format(tournamentDate, 'dd-MMM-yyyy')}">08-Jun-2024 01:11</h4>
-                </div>
-                <div class="col-sm-6 col-md-12">
-                    Players Participated: <span th:text="${playerParticipated}">7</span>
-                </div>
-                <div class="col-sm-6 col-md-12">
-                    Total Matches: <span th:text="${totalMatches}">42</span>
-                </div>
-                <div class="col-sm-6 col-md-12">
-                    Completed Matches: <span th:text="${completedMatches}">13</span>
+        <div class="row clearfix my-3">
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="form-group row">
+                    <label class="control-label col-lg-6 col-md-6 col-sm-6">Tournament Name :</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h5 th:text="${tournamentName}">Tournament Name</h5>
+                    </div>
                 </div>
             </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="form-group row">
+                    <label class="control-label col-lg-6 col-md-6 col-sm-6">Tournament Date :</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h5 th:text="${#dates.format(tournamentDate, 'dd-MMM-yyyy')}">08-Jun-2024 01:11</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="form-group row">
+                    <label class="control-label col-lg-6 col-md-6 col-sm-6">Players Participated :</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h5 th:text="${playerParticipated}">7</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="form-group row">
+                    <label class="control-label col-lg-6 col-md-6 col-sm-6">Total Matches :</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h5 th:text="${totalMatches}">42</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="form-group row">
+                    <label class="control-label col-lg-6 col-md-6 col-sm-6">Completed Matches :</label>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <h5 th:text="${completedMatches}">13</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--        <div class="col-lg-4 col-sm-8">-->
+        <!--            <div class="row my-card">-->
+        <!--                <div class="col-sm-6 col-md-12">-->
+        <!--                    <h5 th:text="${tournamentName}">Tournament Name</h5>-->
+        <!--                    <h4 th:text="${#dates.format(tournamentDate, 'dd-MMM-yyyy')}">08-Jun-2024 01:11</h4>-->
+        <!--                </div>-->
+        <!--                <div class="col-sm-6 col-md-12">-->
+        <!--                    Players Participated: <span th:text="${playerParticipated}">7</span>-->
+        <!--                </div>-->
+        <!--                <div class="col-sm-6 col-md-12">-->
+        <!--                    Total Matches: <span th:text="${totalMatches}">42</span>-->
+        <!--                </div>-->
+        <!--                <div class="col-sm-6 col-md-12">-->
+        <!--                    Completed Matches: <span th:text="${completedMatches}">13</span>-->
+        <!--                </div>-->
+        <!--            </div>-->
             <!--            <div class="card bg-light mb-3">-->
             <!--                <div class="card-header" th:text="${tournamentName}">Tournament Name</div>-->
             <!--                <div class="card-body">-->
@@ -67,8 +110,8 @@
             <!--                </div>-->
             <!--            </div>-->
 
-        </div>
-        <div class="col-lg-8 col-sm-12">
+        <!--        </div>-->
+        <div class="row clearfix mb-5" hidden="hidden">
             <h2 th:if="${pointsTable}">Points Table</h2>
             <table class="table table-striped table-responsive" id="pointsTable" th:if="${pointsTable}">
                 <thead>
@@ -82,7 +125,6 @@
                 </thead>
                 <tbody>
                 <tr th:each="pt:${pointsTable}">
-                    <!--            <td th:text="${tournamentMatch.matchId}"></td>-->
                     <td th:text="${pt.playerName}"></td>
                     <td th:text="${pt.matchPlayed}"></td>
                     <td th:text="${pt.won}"></td>
@@ -92,6 +134,54 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <div class="row clearfix mb-5">
+        <h3>Points Table New &nbsp;&nbsp;</h3><span><button class="btn btn-primary" id="hideBtn" onclick="hideColumn()">Show Less</button></span>
+        <table class="table table-striped table-responsive-md" id="pointsTable2" th:if="${pointsTable2}">
+            <thead>
+            <tr>
+                <!--                    <th>Id</th>-->
+                <th>Name</th>
+                <!--            <th>Nickname</th>-->
+                <!--            <th>Image</th>-->
+                <th>Match Played</th>
+                <th>Wins</th>
+                <th>Lost</th>
+                <th>Score</th>
+                <th>Opp. Score</th>
+                <th>Avg Score</th>
+                <th>Opp. Avg Score</th>
+                <th>Score Margin %</th>
+                <th>Win %</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="player:${pointsTable2}">
+                <!--                    <td th:text="${player.playerId}"></td>-->
+                <!--                    <td th:text="${player.playerName}"></td>-->
+                <td>
+                    <a class="btn btn-link" th:href="@{/player/{id}(id=${player.playerId})}"
+                       th:text="${player.playerName}"></a>
+                </td>
+                <!--            <td th:text="${player.player_nickname}"></td>-->
+                <!--            <td><img class="img-circle"  th:src="${player.image_path}"/></td>-->
+                <td th:text="${player.matchPlayed}"></td>
+                <td th:text="${player.totalWins}"></td>
+                <td th:text="${player.totalLost}"></td>
+                <td th:text="${player.score}"></td>
+                <td th:text="${player.oppScore}"></td>
+                <td th:text="${player.avgScore}"></td>
+                <!--                    <td th:text="${#numbers.formatDecimal(player.avgScore, 0, 2)}"></td>-->
+                <td th:text="${player.oppAvgScore}"></td>
+                <td th:text="${player.scoreMargin}"></td>
+                <td th:text="${player.winPercent}"></td>
+
+                <!--            <td><img src="../static/images/amit.jpg" width="200" th:src="@{images/amit.jpg}"/></td>-->
+
+            </tr>
+            </tbody>
+        </table>
     </div>
 
     <h2 th:if="${tournamentFinalsMatchList}">Final's Schedule</h2>
@@ -330,12 +420,14 @@
       }
       updateModal.show();
     }
-    var pointsTable = new DataTable('#pointsTable',{
+
+    var pointsTable = new DataTable('#pointsTable2',{
         info: false,
         paging: false,
         searching: false,
         order: [ [4 , 'desc'] ]
     });
+
 
     $('#tournamentMatchUpdateForm').submit(function() {
         if ($('#playerOneScore').val() == $('#playerTwoScore').val()) {
@@ -431,6 +523,28 @@
           },
         });
     }
+
+    var flag = false;
+    function hideColumn(){
+
+        var hideBtn= $('#hideBtn');
+        //alert(flag);
+        if(!flag){
+             pointsTable.columns( [ 5, 6, 7, 8, 9] ).visible(false);
+             hideBtn.html('Show More');
+             hideBtn.removeClass('btn-primary');
+             hideBtn.addClass('btn-secondary');
+             flag = true;
+        }
+        else {
+            pointsTable.columns( [ 5, 6, 7, 8, 9] ).visible(true);
+            hideBtn.html('Show Less&nbsp;');
+            hideBtn.removeClass('btn-secondary');
+             hideBtn.addClass('btn-primary');
+            flag = false;
+        }
+    }
+
 <!--    function playAudio() {-->
 <!--        var audio = document.getElementById("audio");-->
 <!--        if(audio) audio.play();-->

@@ -15,17 +15,14 @@
 
         <h3>Create Tournament</h3>
         <!--        <p>Id: <input type="text" th:field="*{tournamentId}" /></p>-->
+        <div class="alert alert-primary" role="alert" th:if="${msg}" th:text="${msg}"></div>
+        <!--        <div class="alert alert-primary">Tournament Created Successfully. ID:> 12</div>-->
         <div class="row">
             <div class="form-group col-lg-4 col-sm-6">
-                <p>Give A Name: <input class="form-control" type="text" th:field="*{tournamentName}"/></p>
-                <p th:if="${#fields.hasErrors('tournamentName')}" th:errors="*{tournamentName}">Name Error</p>
+                <div>Give A Name: <input class="form-control" th:field="*{tournamentName}" type="text"/></div>
+                <small class="form-text text-danger" th:errors="*{tournamentName}"
+                       th:if="${#fields.hasErrors('tournamentName')}">Name Error</small>
             </div>
-            <!--            <div class="form-group col-lg-4 col-sm-6">-->
-            <!--                <p>Duration: <input class="form-control" type="text" th:field="*{duration}"/></p>-->
-            <!--            </div>-->
-<!--            <div class="form-group col">-->
-<!--                <p>Player Count: <input class="form-control" type="text" th:field="*{playerCount}"/></p>-->
-<!--            </div>-->
             <div class="form-group col-lg-4 col-sm-6">
                 <label for="playerList" style="margin-bottom:0px !important">Player Select:</label>
                 <select multiple class="form-control" th:field="*{playerList}" id="playerList">
@@ -33,19 +30,28 @@
                     <option th:each="player:${playerList}" th:value="${player.playerId}"
                             th:text="${player.playerName}"></option>
                 </select>
-                <!--                <label for="playerIds">Player Select:</label>-->
-                <!--                <select multiple class="form-control" id="playerIds" >-->
-                <!--                    <option th:each="player:${playerList}"><label th:text="${player.playerId}"></label></option>-->
-                <!--                </select>-->
+                <small class="form-text text-danger" th:errors="*{playerList}"
+                       th:if="${#fields.hasErrors('playerList')}">playerList Error</small>
             </div>
-            <!--            <div class="form-group col">-->
-            <!--                <p>Player Select:-->
-            <!--                    <input class="form-control" type="checkbox" th:field="*{playerIds}" />-->
-            <!--                </p>-->
-            <!--            </div>-->
+            <div class="form-group col">
+                <div>Player Count: <input class="form-control" id="playerCount" th:field="*{playerCount}" type="text"/>
+                </div>
+                <small class="form-text text-danger" th:errors="*{playerList}"
+                       th:if="${#fields.hasErrors('playerList')}">playerList Error</small>
+            </div>
+            <div class="form-group col-lg-4 col-sm-6">
+                <label for="gameTypeSelect" style="margin-bottom:0px !important">Game Type Select:</label>
+                <select class="form-control" id="gameTypeSelect" th:field="*{gameType}">
+                    <!--                        <option value="0">Select Player</option>-->
+                    <option th:each="gameType:${gameTypeMap}" th:text="${gameType.value}"
+                            th:value="${gameType.key}"></option>
+                </select>
+            </div>
         </div>
-        <p><input type="submit" class="btn btn-primary" value="Submit"/> <input type="reset" class="btn btn-secondary"
-                                                                                value="Reset"/></p>
+        <p>
+            <input class="btn btn-primary" type="submit" value="Submit"/>
+            <input class="btn btn-secondary" type="reset" value="Reset"/>
+        </p>
     </form>
 
 
@@ -97,22 +103,29 @@
     };
 
     $('#playerList').select2({
-      placeholder: 'Select Multiple Players',
-      templateResult: formatState
+        placeholder: 'Select Multiple Players',
+        templateResult: formatState
+    });
+    $('select').on('select2:select', function (e) {
+        $('#playerCount').val($(this).select2('data').length);
+    });
+        $('select').on('select2:unselect', function (e) {
+        $('#playerCount').val($(this).select2('data').length);
     });
 
 
-    $('#tournamentForm').submit(function() {
-        if ($('#tournamentName').val() == "") {
-          alert("Please Enter Tournament Name");
-          return false;
-        } else { return true; }
-        alert($('#playerList').val());
-        console($('#playerList'));
-        console($('#playerList').size());
-        console($('#playerList').length());
 
-    });
+<!--    $('#tournamentForm').submit(function() {-->
+<!--        if ($('#tournamentName').val() == "") {-->
+<!--          alert("Please Enter Tournament Name");-->
+<!--          return false;-->
+<!--        } else { return true; }-->
+<!--        alert($('#playerList').val());-->
+<!--        console($('#playerList'));-->
+<!--        console($('#playerList').size());-->
+<!--        console($('#playerList').length());-->
+
+<!--    });-->
     //new DataTable('#tournamentTable');
 
 <!--    $('#playerList').on("select2:selecting", function(e) {-->

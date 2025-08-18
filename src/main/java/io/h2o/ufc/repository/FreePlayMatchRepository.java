@@ -1,7 +1,9 @@
 package io.h2o.ufc.repository;
 
 import io.h2o.ufc.dto.DailyFreePlayMatchCount;
+import io.h2o.ufc.dto.PVPStatsByGameTypeDTO;
 import io.h2o.ufc.dto.PlayerActivity;
+import io.h2o.ufc.dto.PlayerStatsByGameTypeDTO;
 import io.h2o.ufc.model.FreePlayMatch;
 import io.h2o.ufc.model.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,6 +42,20 @@ public interface FreePlayMatchRepository extends JpaRepository<FreePlayMatch, In
     @Query(name = "getDailyFreePlayMatchCounts", nativeQuery = true)
     public List<DailyFreePlayMatchCount> getDailyFreePlayMatchCounts();
 
+    @Query(name = "getFreePlayStats", nativeQuery = true)
+    public List<PlayerStatsByGameTypeDTO> getFreePlayStats();
+
+    @Query(name = "getTournamentStats", nativeQuery = true)
+    public List<PlayerStatsByGameTypeDTO> getTournamentStats();
+
+    @Query(name = "getPlayerStatsByGameType", nativeQuery = true)
+    public List<PlayerStatsByGameTypeDTO> getPlayerStatsByGameType(int playerId);
+//    @Transactional
+//    @Procedure(name = "new_procedure")
+//    public List<PVPStatsByGameTypeDTO> getPVPStatsByGameType1(int id1, int id2);
+
+    @Query(name = "getPVPStatsByGameType", nativeQuery = true)
+    public List<PVPStatsByGameTypeDTO> getPVPStatsByGameType(int playerOneId, int playerTwoId);
     @Query(name = "getPlayerWiseMatchPlayedPercent", nativeQuery = true)
     public List<PlayerActivity> getPlayerWiseMatchPlayedPercent();
 

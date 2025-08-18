@@ -65,8 +65,16 @@
             <tbody>
             <tr th:each="freePlayMatch:${freePlayList}">
                 <td th:text="${freePlayMatch.freePlayId}"></td>
-                <td th:text="${freePlayMatch.playerOneName}"></td>
-                <td th:text="${freePlayMatch.playerTwoName}"></td>
+                <!--                <td th:text="${freePlayMatch.playerOneName}"></td>-->
+                <!--                <td th:text="${freePlayMatch.playerTwoName}"></td>-->
+                <td>
+                    <a class="btn btn-link" th:href="@{/player/{id}(id=${freePlayMatch.playerOneId})}"
+                       th:text="${freePlayMatch.playerOneName}"></a>
+                </td>
+                <td>
+                    <a class="btn btn-link" th:href="@{/player/{id}(id=${freePlayMatch.playerTwoId})}"
+                       th:text="${freePlayMatch.playerTwoName}"></a>
+                </td>
                 <td th:text="${freePlayMatch.playerOneScore}"></td>
                 <td th:text="${freePlayMatch.playerTwoScore}"></td>
                 <td th:text="${freePlayMatch.winnerName}"></td>

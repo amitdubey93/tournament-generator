@@ -23,6 +23,7 @@ public class ScheduleGenerator {
                         .tournament(tournament)
                         .matchNo(matchNo++)
                         .roundNo(round)
+                        .gameType(tournament.getGameType())
                         .playerOneId(playerOne)
                         .playerTwoId(playerTwo)
                         .build());
@@ -46,6 +47,7 @@ public class ScheduleGenerator {
                     .playerTwoId(2002)
                     .matchNo(matchNo++)
                     .roundNo(2001)
+                    .gameType(tournament.getGameType())
                     .build());
         } else {
             //create two semifinals and a final
@@ -55,6 +57,7 @@ public class ScheduleGenerator {
                     .playerTwoId(2002)
                     .matchNo(matchNo++)
                     .roundNo(1001)
+                    .gameType(tournament.getGameType())
                     .build());
             schedule.add(TournamentMatch.builder()
                     .tournament(tournament)
@@ -62,6 +65,7 @@ public class ScheduleGenerator {
                     .playerTwoId(2002)
                     .matchNo(matchNo++)
                     .roundNo(1002)
+                    .gameType(tournament.getGameType())
                     .build());
 //            schedule.add(TournamentMatch.builder()
 //                    .tournament(tournament)
@@ -76,6 +80,7 @@ public class ScheduleGenerator {
                     .playerTwoId(2002)
                     .matchNo(matchNo++)
                     .roundNo(2001)
+                    .gameType(tournament.getGameType())
                     .build());
 
         }

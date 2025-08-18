@@ -1,5 +1,6 @@
 package io.h2o.ufc.repository;
 
+import io.h2o.ufc.dto.PlayerStatsByGameTypeDTO;
 import io.h2o.ufc.model.TournamentMatch;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface TournamentMatchRepository extends JpaRepository<TournamentMatch, Integer> {
@@ -32,6 +34,9 @@ public interface TournamentMatchRepository extends JpaRepository<TournamentMatch
     @Modifying
     @Query(value = "UPDATE tournament_matches SET player_two_id = :playerTwoId where round_no = 2001 and tournament_id = :tourId", nativeQuery = true)
     public int updateFinalPlayerTwo(int playerTwoId, int tourId);
+
+    @Query(name = "getPointsTable", nativeQuery = true)
+    public List<PlayerStatsByGameTypeDTO> getPointsTable(int tourId);
 
 
 }
