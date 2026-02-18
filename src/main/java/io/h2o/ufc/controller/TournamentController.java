@@ -79,13 +79,13 @@ public class TournamentController {
         Map<Integer, Player> playerMap = playerService.findAll().stream().collect(Collectors
                 .toMap(Player::getPlayerId, player -> player));
 
-        //System.err.println("playerMap:: "+playerMap);
+        System.err.println("playerMap:: " + playerMap);
         Tournament tournament = tournamentService.findById(id);
         Collection<TournamentMatch> tournamentMatchList = tournament.getTournamentMatchList();
 
 
         //Collection<TournamentMatch> tournamentFinalsMatchList = tournamentMatchList.stream().filter(tournamentMatch -> tournamentMatch.getRoundNo() != 2001).toList();
-        tournamentMatchList.stream().forEach(match ->
+        tournamentMatchList.forEach(match ->
        {
            match.setPlayerOneImagePath(playerMap.get(match.getPlayerOneId()).getImagePath());
            match.setPlayerTwoImagePath(playerMap.get(match.getPlayerTwoId()).getImagePath());
@@ -99,7 +99,7 @@ public class TournamentController {
 
         Collection<PointsTable> pointsTable = tournament.getPointsTable().stream().sorted(
                 (pt1, pt2) -> Integer.compare(pt2.getScore(), pt1.getScore())).toList();
-        pointsTable.stream().forEach(pt -> pt.setPlayerName(playerMap.get(pt.getPlayerId()).getPlayerName()));
+        pointsTable.forEach(pt -> pt.setPlayerName(playerMap.get(pt.getPlayerId()).getPlayerName()));
         List<PlayerStatsByGameTypeDTO> pointsTable2 = tournamentMatchService.getPointsTable(id);
         pointsTable2.stream().sorted(
                 (pt1, pt2) -> Integer.compare(pt2.getScore(), pt1.getScore())).toList();

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Header</title>
@@ -49,7 +50,7 @@
               <a class="nav-link" th:href="@{/dashboard}">Home</a>
               <!--              <a class="nav-link" th:href="@{/}">Home</a>-->
           </li>
-          <li class="nav-item">
+          <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
               <a class="nav-link" th:href="@{/tournament}">Tournaments</a>
           </li>
           <li class="nav-item">
@@ -58,10 +59,17 @@
           <li class="nav-item">
               <a class="nav-link" th:href="@{/stats}">Player Stats</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
               <a class="nav-link" th:href="@{/player}">Add Player</a>
           </li>
+          <li class="nav-item">
+              <a class="nav-link" th:href="@{/logout}">Logout</a>
+          </li>
       </ul>
+        <span style="float:right">
+          Welcome <span th:text="${#authentication.name}"></span>
+            <!--          <span sec:authentication="principal.authorities"></span>-->
+      </span>
     </div>
     <!--    <div class="row" th:text="${#httpServletRequest.getRequestURI()}"></div>-->
     <script>

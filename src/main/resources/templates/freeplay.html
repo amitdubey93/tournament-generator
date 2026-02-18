@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="ISO-8859-1">
     <title>Free Play Matches</title>
@@ -9,7 +10,8 @@
 <div class="container my-2">
 
     <div>
-        <form action="#" id="freePlayForm" method="post" style="margin-bottom:20px" th:action="@{/freePlay}"
+        <form action="#" id="freePlayForm" method="post" sec:authorize="hasRole('ROLE_ADMIN')"
+              style="margin-bottom:20px" th:action="@{/freePlay}"
               th:object="${freePlayMatch}">
 
             <h3>Create FreePlay Match</h3>

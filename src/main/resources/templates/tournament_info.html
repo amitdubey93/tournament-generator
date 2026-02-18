@@ -463,6 +463,10 @@
           data: jsonString,
           contentType: "application/json; charset=utf-8",
           dataType: "json",
+<!--          headers: { 'Access-Control-Allow-Origin', '*' ,-->
+<!--                      'Access-Control-Allow-Methods', '*',-->
+<!--                      'Access-Control-Allow-Credentials', true-->
+<!--          },-->
           success: function (response) {
             celebrate(response.winnerName);
             //playAudio();

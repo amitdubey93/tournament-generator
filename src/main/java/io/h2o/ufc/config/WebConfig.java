@@ -1,4 +1,4 @@
-package io.h2o.ufc;
+package io.h2o.ufc.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
